@@ -22,7 +22,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="my-icons.html">
 
-<dom-module id="my-app">
+<dom-module id="slaughter-house">
   <template>
     <style>
       :host {
@@ -46,13 +46,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       .drawer-list a {
         display: block;
-
         padding: 0 16px;
-
         text-decoration: none;
-
         color: var(--app-secondary-color);
-
         line-height: 40px;
       }
 
@@ -70,16 +66,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
+    <app-route
+        route="{{subroute}}"
+        pattern="/:pigid"
+        data="{{subrouteData}}">
+    </app-route>
+
     <app-drawer-layout fullbleed>
-      <!-- Drawer content -->
-      <app-drawer>
-        <app-toolbar>Menu</app-toolbar>
-        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="view1" href="/view1">View One</a>
-          <a name="view2" href="/view2">View Two</a>
-          <a name="view3" href="/view3">View Three</a>
-        </iron-selector>
-      </app-drawer>
 
       <!-- Main content -->
       <app-header-layout has-scrolling-region>
@@ -87,7 +80,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-header condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-            <div main-title>My App</div>
+            <div main-title>Slaughterhouse</div>
           </app-toolbar>
         </app-header>
 
@@ -96,8 +89,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             attr-for-selected="name"
             fallback-selection="view404"
             role="main">
-          <my-view1 name="view1"></my-view1>
-          <my-view2 name="view2"></my-view2>
+          <pigs-list name="pigs" pigs=[[data.pigs]]></pigs-list>
+          <pig-view name="pig" pig=[[pigSelected]]></pig-view>
           <my-view3 name="view3"></my-view3>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
@@ -107,27 +100,71 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script>
     Polymer({
-      is: 'my-app',
+      is: 'slaughter-house',
 
       properties: {
         page: {
           type: String,
           reflectToAttribute: true,
           observer: '_pageChanged'
+        },
+        pigSelected: {
+          type: Object,
+          value: {}
+        },
+        data: {
+          type: Object,
+          reflectToAttribute: false,
+          value: function() {
+            return {
+              pigs: [{
+                id: '0',
+                name: 'Pepa',
+                size: 1.0,
+                weight: 80,
+                price: 1999.90
+              }, {
+                id: '1',
+                name: 'Tonda',
+                size: 1.1,
+                weight: 90,
+                price: 2999.90
+              }]
+            }
+          }
         }
       },
 
       observers: [
-        '_routePageChanged(routeData.page)'
+        '_routePageChanged(routeData.page)',
+        '_routePigIdChanged(subrouteData.pigid)'
       ],
 
       _routePageChanged: function(page) {
-        this.page = page || 'view1';
+        this.page = page || 'pigs';
+      },
+
+      _routePigIdChanged: function(pigid) {
+        if(pigid && this.data) {
+          this.pigSelected = this.data.pigs.find(x => x.id === pigid)
+        }
       },
 
       _pageChanged: function(page) {
         // Load page import on demand. Show 404 page if fails
-        var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
+        url = ''
+        switch (page) {
+          case 'pigs':
+            url = 'pigs-list'
+            break;
+          case 'pig':
+            url = 'pig-view'
+            break;
+          case 'view3':
+            url = 'my-view3';
+            break;
+        }
+        var resolvedPageUrl = this.resolveUrl(url + '.html');
         this.importHref(resolvedPageUrl, null, this._showPage404, true);
       },
 
