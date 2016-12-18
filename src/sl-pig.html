@@ -9,40 +9,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="sl-pig.html">
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="pig-view">
+<dom-module id="sl-pig">
   <template>
     <style include="shared-styles">
       :host {
         display: block;
         padding: 10px;
-        @apply(--layout-horizontal);
-        @apply(--layout-wrap);
-      }
-
-      :host .card {
-        margin: 5px;
-      }
-
-      #pig {
-        min-width: 300px;
-        @apply(--layout-flex-7);
-      }
-      #cart {
-        @apply(--layout-flex-5);
       }
     </style>
-    <sl-pig id="pig" pig="{{pig}}" class="card"></sl-pig>
-    <div id="cart" class="card">
-      Hello
+    <div id="pig">
+      <div class="">
+        Id: [[pig.id]]
+      </div>
+      <div class="">
+        This is [[pig.name]]
+      </div>
+      <div class="">
+        his size is [[pig.size]]x normal size
+      </div>
+      <div class="">
+        and his weight [[pig.weight]]Kg definitely raises respect.
+      </div>
     </div>
   </template>
 
   <script>
     Polymer({
-      is: 'pig-view',
+      is: 'sl-pig',
 
       properties: {
         pig: {

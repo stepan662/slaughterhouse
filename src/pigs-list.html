@@ -9,6 +9,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+
+
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="pigs-list">
@@ -16,11 +23,54 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
-
         padding: 10px;
       }
+
+      #filter {
+        margin-left: 15px;
+        margin-right: 15px;
+        @apply(--layout-horizontal);
+        @apply(--layout-wrap);
+        @apply(--layout-justified);
+      }
+      #search, #sort {
+        margin-left: 10px;
+        margin-right: 10px;
+        @apply(--layout-flex-3)
+      }
+      #search {
+        min-width: 300px;
+        @apply(--layout-flex-9)
+      }
+      #sort{
+        min-width: 300px;
+      }
+      #sort paper-menu, #sort paper-menu-button {
+        min-width: 300px;
+      }
+      #sort paper-item {
+        cursor: pointer;
+      }
     </style>
-    <template is="dom-repeat" items="{{pigs}}">
+    <div id="filter">
+      <paper-input id="search" invalid=[[!itemCount]]
+        error-message="No results" label="Search"
+        value="{{searchValue}}">
+      </paper-input>
+
+      <paper-dropdown-menu id="sort" label="Sort by"
+        selected-item="{{sortBy}}" placeholder="Name">
+        <paper-menu class="dropdown-content" selected="0">
+          <paper-item value="name" desc="false">Name</paper-item>
+          <paper-item value="name" desc="true">Name (desc)</paper-item>
+          <paper-item value="weight" desc="false">Weight</paper-item>
+          <paper-item value="weight" desc="true">Weight (desc)</paper-item>
+        </paper-menu>
+      </paper-dropdown-menu>
+    </div>
+    <template is="dom-repeat" filter="{{pigSearch(searchValue)}}"
+              items="{{pigs}}" rendered-item-count="{{itemCount}}"
+              sort="{{pigSort(sortBy)}}">
       <a href="/pig/[[item.id]]">
         <div class="card">
           <div class="">Name: [[item.name]]</div>
@@ -29,7 +79,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </a>
     </template>
   </template>
-
+  [[sortBy]]
   <script>
     Polymer({
       is: 'pigs-list',
@@ -38,6 +88,46 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Object,
           reflectToAttribute: true,
           value: []
+        },
+        itemCount: {
+          type: Number,
+          reflectToAttribute: false,
+          value: 0
+        }
+      },
+      pigSearch: function(string) {
+        if (!string) {
+          // set filter to null to disable filtering
+          return null;
+        } else {
+          // return a filter function for the current search string
+          string = string.toLowerCase();
+          return function(pig) {
+            return (pig.name.toLowerCase().indexOf(string) != -1 ||
+                    pig.weight.toString().indexOf(string) != -1)
+          };
+        }
+      },
+      pigSort: function(objItem) {
+        if(!objItem) {
+          return function (first, second) {
+            return first['name'].localeCompare(second['name'])
+          }
+        }
+        else {
+          console.log(objItem)
+          // return a sort function for the current search attr
+          var attr = objItem.getAttribute('value')
+          var desc = objItem.getAttribute('desc') == "false" ? 1 : -1
+          console.log(attr)
+          return function(first, second) {
+            if(typeof(first[attr]) == "string") {
+              return desc * first[attr].localeCompare(second[attr])
+            }
+            else {
+              return desc * (first[attr] > second[attr] ? 1 : -1)
+            }
+          };
         }
       }
     });
