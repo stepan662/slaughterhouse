@@ -16,11 +16,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 
 
-<link rel="import" href="../dark-side.html">
+<link rel="import" href="melon.html">
 
 <dom-module id="pigs-list">
   <template>
-    <style include="dark-side">
+    <style include="melon"></style>
+    <style>
       :host {
         display: block;
         padding: 10px;
@@ -51,6 +52,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #sort paper-item {
         cursor: pointer;
       }
+      a paper-item {
+        margin-left: 25px;
+        margin-right: 25px;
+        cursor: pointer;
+      }
     </style>
     <div id="filter">
       <paper-input id="search" invalid=[[!itemCount]]
@@ -72,10 +78,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               items="{{pigs}}" rendered-item-count="{{itemCount}}"
               sort="{{pigSort(sortBy)}}">
       <a href="/pig/[[item.id]]">
-        <div class="card">
-          <div class="">Name: [[item.name]]</div>
-          <div class="">Weight: [[item.weight]]</div>
-        </div>
+        <paper-item>
+          <div class="">Name: [[item.name]] | Weight: [[item.weight]]</div>
+        </paper-item>
       </a>
     </template>
   </template>

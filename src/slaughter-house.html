@@ -21,14 +21,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="my-icons.html">
-<link rel="import" href="../dark-side.html">
+<link rel="import" href="melon.html">
 
 <dom-module id="slaughter-house">
   <template>
-    <style include="dark-side"></style>
+    <style include="melon"></style>
     <style>
       :host {
-        --app-primary-color: black;
+        --app-primary-color: #131313;
         --app-secondary-color: gray ;
 
         display: block;
@@ -50,7 +50,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       #pages {
-        background-image: url('../images/oldwallDark.png');
         background-attachment: scroll;
         min-height: 100%
       }
@@ -60,16 +59,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .drawer-list a {
-        display: block;
-        padding: 0 16px;
         text-decoration: none;
-        color: var(--app-secondary-color);
-        line-height: 40px;
       }
 
       .drawer-list a.iron-selected {
         color: black;
-
         font-weight: bold;
       }
     </style>

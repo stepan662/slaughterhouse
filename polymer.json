@@ -1,9 +1,9 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/my-app.html",
+  "shell": "src/slaughter-house.html",
   "fragments": [
     "src/pigs-list.html",
-    "src/my-view2.html",
+    "src/pig-view.html",
     "src/my-view3.html",
     "src/my-view404.html"
   ],
