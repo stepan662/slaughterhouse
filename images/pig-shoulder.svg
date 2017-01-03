@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="19.111963mm"
+   height="55.808731mm"
+   viewBox="0 0 67.719555 197.74747"
+   id="svg4764"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="pig-shoulder.svg">
+  <defs
+     id="defs4766" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="-219.71165"
+     inkscape:cy="210.30231"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1366"
+     inkscape:window-height="704"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata4769">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-86.140219,-544.91704)">
+    <path
+       inkscape:connector-curvature="0"
+       style="opacity:1;fill:#fca8de;fill-opacity:0.66842101;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 137.51524,545.41618 c 0,0 -15.02633,0.88381 -31.0625,4.67188 -16.036166,3.78807 -19.572266,5.42968 -19.572266,5.42968 l 0,0.16602 c 0.13795,0.0155 0.12696,0.0859 0.12696,0.0859 0,0 6.69181,16.79368 8.20703,24.49609 1.51523,7.70242 0.12665,35.86155 -1.00977,44.19531 -1.13642,8.33376 -2.4002,17.04456 -4.16797,25.63088 -1.76776,8.5863 -3.4082,16.03711 -3.4082,16.03711 0,0 -0.1669,-0.0341 -0.17187,-0.0352 0.58009,0.26266 7.17661,3.2307 11.2832,4.07617 4.293136,0.88388 10.607416,2.9043 10.607416,2.9043 0,0 -0.12665,4.16652 1.00977,11.11132 1.13642,6.9448 4.04033,10.85951 3.91406,18.81446 -0.12627,7.95495 -2.72342,21.77124 -7.53265,26.93805 -5.71274,6.13752 -11.912656,7.2807 -11.912656,7.2807 l -2.02149,2.77734 9.559986,2.16825 c 0,0 16.70448,-0.0213 22.26032,-0.65262 5.55583,-0.63134 10.52149,-3.02149 10.52149,-3.02149 l 0.49609,-5.29883 c 0,0 -2.2417,0.57363 -2.87304,-1.69922 -0.63135,-2.27284 0.95898,-4.5664 0.95898,-4.5664 l -0.0703,-2.02539 0.58203,-2.98242 c 0,0 0.92413,-12.36955 2.06054,-18.93555 1.13642,-6.56599 0.27315,-3.15168 1.66211,-8.07617 1.38896,-4.9245 8.24024,-17.3086 8.24024,-17.3086 0,0 7.46367,1.53728 7.96875,-7.80664 0.9278,-17.16424 -1.7668,-25.63387 -3.78711,-39.52346 -2.0203,-13.8896 -4.04093,-27.90427 -6.1875,-47.72851 -2.14657,-19.82425 -5.68164,-37.12305 -5.68164,-37.12305 z"
+       id="path4270"
+       sodipodi:nodetypes="cscccsssccscssscccsccscccsscssscc" />
+  </g>
+</svg>

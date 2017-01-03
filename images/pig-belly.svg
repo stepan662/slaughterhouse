@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="38.993431mm"
+   height="15.815251mm"
+   viewBox="0 0 138.1657 56.038292"
+   id="svg6529"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="pig-belly.svg">
+  <defs
+     id="defs6531" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="-258.77429"
+     inkscape:cy="290.87629"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1366"
+     inkscape:window-height="704"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata6534">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-125.20286,-767.2002)">
+    <path
+       inkscape:connector-curvature="0"
+       style="opacity:1;fill:#fca8de;fill-opacity:0.66842101;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 244.68477,767.72314 -0.0996,0.004 c 8.8e-4,0.006 0.0117,0.11133 0.0117,0.11133 0,0 -13.12528,1.16043 -22.85742,1.51758 -9.73216,0.35714 -23.03601,1.78599 -29.73244,2.23242 -6.69643,0.44643 -22.14257,0.35602 -34.64257,1.07031 -12.38993,0.70799 -30.81762,2.6261 -31.14454,2.66016 0.17469,1.15296 0.22607,1.49695 0.34961,2.36719 1.02532,5.76288 2.56017,14.99806 2.83204,19.20507 0.71795,11.11018 0.72857,10.63091 0.18945,16.54102 -0.56821,6.22911 -3.47266,7.26172 -3.47266,7.26172 0,0 0.56984,0.56661 3.72656,1.32422 3.15673,0.75762 22.98085,0.75845 31.88282,0.69531 8.90196,-0.0631 32.70329,-0.63238 40.84765,-1.45313 8.14435,-0.82075 17.23541,-0.0627 28.59962,-3.3457 11.36422,-3.283 6.62996,0.1898 13.13282,-1.00976 6.50285,-1.19955 18.43359,-6.69141 18.43359,-6.69141 0,0 -1.7676,-4.86218 -6.81836,-10.60742 -5.05076,-5.74524 -9.97461,-11.42774 -9.97461,-11.42774 0,0 -0.37963,-6.50232 -0.69531,-12.8789 -0.31567,-6.37659 -0.56836,-7.57618 -0.56836,-7.57618 z m -118.11525,9.9629 c -0.17314,-0.97317 -0.29979,-1.66044 -0.42968,-2.35938 -6.9e-4,7e-5 -0.0779,0.008 -0.0781,0.008 0.81107,4.72374 0.76319,4.15033 0.50781,2.35157 z"
+       id="path4396" />
+  </g>
+</svg>

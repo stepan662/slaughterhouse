@@ -20,6 +20,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="my-icons.html">
 <link rel="import" href="melon.html">
 
@@ -81,6 +84,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         data="{{subrouteData}}">
     </app-route>
 
+    <firebase-app
+      id="auth"
+      auth-domain="slaughterhouse-81b78.firebaseapp.com"
+      database-url="https://slaughterhouse-81b78.firebaseio.com"
+      api-key="AIzaSyDVgVwDr_VZL2LGEFVDTmSUDpUcSpPAVVI">
+    </firebase-app>
+
+    <firebase-auth id="auth" user="{{user}}" provider="anonymous" on-error="handleError">
+    </firebase-auth>
+    <firebase-document
+      path="/pigs"
+      data="{{pigs}}">
+    </firebase-document>
+
     <app-drawer-layout fullbleed>
 
       <!-- Main content -->
@@ -93,21 +110,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </app-toolbar>
         </app-header>
 
+        User ID: {{user.uid}}
+
         <iron-pages
             id="pages"
             selected="[[page]]"
             attr-for-selected="name"
             fallback-selection="view404"
             role="main">
-          <pigs-list name="pigs" pigs=[[data.pigs]]></pigs-list>
-          <pig-view name="pig" pig=[[pigSelected]]></pig-view>
+          <pigs-list name="pigs" pigs=[[pigs]]></pigs-list>
+          <pig-view
+              name="pig"
+              pig=[[pigSelected]]
+              on-killPig="_killPig"></pig-view>
           <my-view3 name="view3"></my-view3>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
   </template>
-
   <script>
     Polymer({
       is: 'slaughter-house',
@@ -120,46 +141,49 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         pigSelected: {
           type: Object,
-          value: {}
+          value: {},
         },
-        data: {
+        pigSelectedId: {
+          type: String,
+          value: ''
+        },
+        pigs: {
           type: Object,
-          reflectToAttribute: false,
-          value: function() {
-            return {
-              pigs: [{
-                id: '0',
-                name: 'Pepa',
-                weight: 80,
-                price: 1999.90
-              }, {
-                id: '1',
-                name: 'Tonda',
-                weight: 90,
-                price: 2999.90
-              }, {
-                id: '2',
-                name: 'Luboš',
-                weight: 85,
-                price: 2999.90
-              }, {
-                id: '3',
-                name: 'Martin',
-                weight: 102,
-                price: 2999.90
-              }, {
-                id: '4',
-                name: 'Honza',
-                weight: 97,
-                price: 2999.90
-              }, {
-                id: '5',
-                name: 'Lukáš',
-                weight: 79,
-                price: 2999.90
-              }]
+          observer: 'pigChange',
+          /*
+          value: {
+            'absidfsdf90': {
+              name: 'Pepa',
+              weight: 80,
+              price: 2399.90,
+              state: 'alive',
+              body: {
+                head: 'brown',
+                shoulder: 'red',
+                back: 'orange',
+                midbut: 'pink',
+                belly: 'brown',
+                ham: 'red',
+                tail: 'yellow'
+              }
+            },
+            'absidfsdf91': {
+              name: 'Janek',
+              weight: 80,
+              price: 1999.90,
+              state: 'alive',
+              body: {
+                head: 'brown',
+                shoulder: 'brown',
+                back: 'orange',
+                midbut: 'pink',
+                belly: 'gray',
+                ham: 'red',
+                tail: 'blue'
+              }
             }
           }
+          */
         }
       },
 
@@ -168,13 +192,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         '_routePigIdChanged(subrouteData.pigid)'
       ],
 
+      listeners: {
+        'killPig': '_killPig',
+        'ressurectPig': '_ressurectPig',
+      },
+
+      pigChange: function() {
+        console.log(this.pigs)
+      },
+
+      _killPig: function(e) {
+        this.set('pigs.' + this.pigSelectedId + '.state', 'dead')
+        this.notifyPath('pigSelected.state')
+      },
+
+      _ressurectPig: function(e) {
+        this.set('pigs.' + this.pigSelectedId + '.state', 'alive')
+        this.notifyPath('pigSelected.state')
+      },
+
       _routePageChanged: function(page) {
         this.page = page || 'pigs';
       },
 
       _routePigIdChanged: function(pigid) {
-        if(pigid && this.data) {
-          this.pigSelected = this.data.pigs.find(x => x.id === pigid)
+        if (pigid && this.pigs) {
+          this.pigSelected = this.pigs[pigid]
+          this.pigSelectedId = pigid
         }
       },
 
@@ -198,6 +242,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _showPage404: function() {
         this.page = 'view404';
+      },
+
+      _arrItem: function(arr, item) {
+        return arr[item]
       }
     });
   </script>

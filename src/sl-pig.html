@@ -9,6 +9,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="sl-organ.html">
 <link rel="import" href="melon.html">
 
 <dom-module id="sl-pig">
@@ -17,36 +19,180 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style>
       :host {
         display: block;
-        padding: 10px;
+        padding: 0px;
+        overflow: hidden;
+      }
+
+      #pigcomp {
+        transform-origin: 0% 0%;
+        width: 500px;
+        height: 300px;
+        position: relative;
+      }
+
+      #pigcomp sl-organ {
+        position: absolute;
+      }
+
+      .alive #head {
+        left: 49.5px;
+        top: 60px;
+        transition: linear 1s;
+      }
+      .dead #head {
+        left: 19.5px;
+        top: 60px;
+        transition: linear .1s;
+      }
+      .alive #shoulder {
+        left: 134px;
+        top: 54px;
+        transition: linear 1s;
+      }
+      .dead #shoulder {
+        left: 124px;
+        top: 54px;
+        transition: linear .1s;
+      }
+      .alive #back {
+        left: 184.5px;
+        top: 52.7px;
+        transition: linear 1s;
+      }
+      .dead #back {
+        left: 194.5px;
+        top: 42.7px;
+        transition: linear .1s;
+      }
+      .alive #midbut {
+        left: 190px;
+        top: 83.3px;
+        transition: linear 1s;
+      }
+      .dead #midbut {
+        left: 200px;
+        top: 89.3px;
+        transition: linear .1s;
+      }
+      .alive #belly {
+        left: 196.5px;
+        top: 132.3px;
+        transition: linear 1s;
+      }
+      .dead #belly {
+        left: 206.5px;
+        top: 152.3px;
+        transition: linear .1s;
+      }
+      .alive #ham {
+        left: 315.5px;
+        top: 59.1px;
+        transition: linear 1s;
+      }
+      .dead #ham {
+        left: 345.5px;
+        top: 59.1px;
+        transition: linear .1s;
+      }
+      .alive #tail {
+        left: 397px;
+        top: 92px;
+        transition: linear 1s;
+      }
+      .dead #tail {
+        left: 447px;
+        top: 92px;
+        transition: linear .1s;
       }
     </style>
-    <div id="pig">
-      <div class="">
-        Id: [[pig.id]]
-      </div>
-      <div class="">
-        This is [[pig.name]]
-      </div>
-      <div class="">
-        his size is [[pig.size]]x normal size
-      </div>
-      <div class="">
-        and his weight [[pig.weight]]Kg definitely raises respect.
-      </div>
+    <div id="pigcomp" on-tap="killPig" class$="[[status]]">
+      <template is="dom-repeat" items="[[bodyArr]]">
+        <template is="dom-if" if="[[item]]">
+          <sl-organ id="[[item.name]]" color="[[item.value]]" type="[[item.name]]"></sl-organ>
+        </template>
+      </template>
     </div>
   </template>
 
   <script>
     Polymer({
       is: 'sl-pig',
-
       properties: {
         pig: {
           type: Object,
           value: {}
+        },
+        bodyArr: {
+          type: Array,
+          computed: '_computeBodyArr(pig.body.*)'
+        },
+        interactive: {
+          type: Boolean,
+          value: false
+        },
+        width: {
+          type: Number,
+          value: false,
+          observer: '_scale',
+        },
+        height: {
+          type: Number,
+          value: false,
+          observer: '_scale'
+        },
+        status: {
+          type: String,
+          computed: '_computePigStatus(bodyArr)'
         }
-      }
+      },
 
+
+      _scale: function() {
+        if(this.height || this.width) {
+          this.style.height = this.height + 'px'
+          if(!this.width) {
+            this.width = (this.height/300) * 500
+          } else if (!this.height) {
+            this.height = (this.width/500) * 300
+          }
+          this.$.pigcomp.style.transform = 'scale('
+                  + (this.width/500) + ', ' + this.height/300 + ')';
+          this.style.width = this.width + 'px'
+          this.style.height = this.height + 'px'
+        }
+      },
+
+
+      _computeBodyArr: function(){
+        var organs = this.pig.body
+        arr =[]
+        for(var item in organs) {
+          if(organs[item]) {
+            arr.push({
+              name: item,
+              value: organs[item]
+            })
+          }
+          else {
+            arr.push(false)
+          }
+        }
+        return arr
+      },
+
+      _computePigStatus: function(bodyArr){
+        for(var orgn in bodyArr) {
+          if(bodyArr[orgn] == false) {
+            return 'dead'
+          }
+        }
+        return 'alive'
+      },
+
+      killPig(e) {
+        if(this.pig.state == 'alive' && this.interactive)
+          this.fire('killPig', {pig: this.pig})
+      },
     });
   </script>
 </dom-module>

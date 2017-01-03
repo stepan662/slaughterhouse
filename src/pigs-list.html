@@ -14,9 +14,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
-
-
 <link rel="import" href="melon.html">
+<link rel="import" href="sl-pig.html">
 
 <dom-module id="pigs-list">
   <template>
@@ -74,30 +73,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-menu>
       </paper-dropdown-menu>
     </div>
-    <template is="dom-repeat" filter="{{pigSearch(searchValue)}}"
-              items="{{pigs}}" rendered-item-count="{{itemCount}}"
-              sort="{{pigSort(sortBy)}}">
-      <a href="/pig/[[item.id]]">
-        <paper-item>
-          <div class="">Name: [[item.name]] | Weight: [[item.weight]]</div>
-        </paper-item>
-      </a>
-    </template>
+    <table border="1">
+      <template is="dom-repeat" filter="{{pigSearch(searchValue)}}"
+                items="{{pigsArr}}" rendered-item-count="{{itemCount}}"
+                sort="{{pigSort(sortBy)}}">
+        <a style="display: table-row" href="/pig/[[item.name]]">
+          <tr>
+            <td><div style="display:inline-block"><sl-pig style="display: inline block" width="100" pig="[[item.value]]"></sl-pig></div></td>
+            <td>[[item.value.name]]</td>
+            <td>[[item.value.weight]]</td>
+            <td>[[item.value.price]]</td>
+          </tr>
+        </a>
+
+      </template>
+    </table>
   </template>
-  [[sortBy]]
   <script>
     Polymer({
       is: 'pigs-list',
       properties: {
         pigs: {
           type: Object,
-          reflectToAttribute: true,
+          reflectToAttribute: false,
           value: []
         },
         itemCount: {
           type: Number,
           reflectToAttribute: false,
           value: 0
+        },
+        pigsArr: {
+          type: Array,
+          computed: '_pigsToArr(pigs.*)'
         }
       },
       pigSearch: function(string) {
@@ -107,16 +115,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         } else {
           // return a filter function for the current search string
           string = string.toLowerCase();
-          return function(pig) {
-            return (pig.name.toLowerCase().indexOf(string) != -1 ||
-                    pig.weight.toString().indexOf(string) != -1)
+          return function(item) {
+            return (item.value.name.toLowerCase().indexOf(string) != -1 ||
+                    item.value.weight.toString().indexOf(string) != -1)
           };
         }
       },
+
       pigSort: function(objItem) {
         if(!objItem) {
           return function (first, second) {
-            return first['name'].localeCompare(second['name'])
+            return first.value['name'].localeCompare(second.value['name'])
           }
         }
         else {
@@ -124,15 +133,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var attr = objItem.getAttribute('value')
           var desc = objItem.getAttribute('desc') == "false" ? 1 : -1
           return function(first, second) {
-            if(typeof(first[attr]) == "string") {
-              return desc * first[attr].localeCompare(second[attr])
+            if(typeof(first.value[attr]) == "string") {
+              return desc * first.value[attr].localeCompare(second.value[attr])
             }
             else {
-              return desc * (first[attr] > second[attr] ? 1 : -1)
+              return desc * (first.value[attr] > second.value[attr] ? 1 : -1)
             }
           };
         }
-      }
+      },
+
+      _pigsToArr: function(a){
+        var obj = this.pigs
+        arr =[]
+        for(var item in obj) {
+          arr.push({
+            name: item,
+            value: obj[item]
+          })
+        }
+        console.log(arr)
+        return arr
+      },
     });
   </script>
 </dom-module>

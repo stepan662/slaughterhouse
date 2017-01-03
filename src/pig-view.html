@@ -10,6 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="sl-pig.html">
+<link rel="import" href="sl-organ.html">
 <link rel="import" href="melon.html">
 
 <dom-module id="pig-view">
@@ -30,28 +31,75 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #pig {
         min-width: 300px;
         @apply(--layout-flex-7);
+        position: relative;
+      }
+      sl-pig {
+        position: absolute;
+        top: 0px;
+        left: 0px;
       }
       #cart {
         @apply(--layout-flex-5);
+        @apply(--layout-vertical);
+        @apply(--layout-wrap);
       }
     </style>
-    <sl-pig id="pig" pig="{{pig}}" class="card"></sl-pig>
-    <div id="cart" class="card">
-      Hello
+    <div id="pig">
+      <sl-pig pig="{{pig}}" class="card" interactive></sl-pig>
+    </div>
+    <div id="cart">
+      <template is="dom-if" if="[[_isDead(pig.state)]]">
+        Cart
+        <template is="dom-repeat" items="[[cart]]">
+          <sl-organ color="[[item.color]]" type="[[item.type]]"></sl-organ>
+        </template>
+      </template>
     </div>
   </template>
 
   <script>
     Polymer({
       is: 'pig-view',
-
       properties: {
         pig: {
           type: Object,
-          value: {}
+          value: {},
+          notify: false,
+        },
+        cart: {
+          type: Array,
+          value: []
+        },
+        active: {
+          type: Boolean,
+          value: false,
+          notify: true
         }
-      }
+      },
 
+      listeners: {
+        'organClicked': 'addToCart',
+      },
+
+      addToCart: function(e) {
+        if(this.pig.state == 'dead') {
+          var type = e.detail.type
+          if(!this.active) {
+            this.active = true
+            // clone object for local needs
+            this.set('pig', JSON.parse(JSON.stringify(this.pig)))
+          }
+          if(this.pig.body[type] == false) {
+            return
+          }
+          this.push('cart', {type: type, color: this.pig.body[type]})
+          this.set('pig.body.' + type, false)
+        }
+      },
+
+      _isDead: function(state) {
+        return state == 'dead'
+      },
     });
   </script>
 </dom-module>
