@@ -12,8 +12,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/polymer-font-awesome/polymer-font-awesome.html">
 <link rel="import" href="melon.html">
 <link rel="import" href="sl-pig.html">
 
@@ -56,6 +58,54 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-right: 25px;
         cursor: pointer;
       }
+
+      .pigs {
+        margin: 5px 15px 5px 15px;
+      }
+
+      .pig-link {
+        text-decoration:none !important;
+        text-decoration:none;
+      }
+
+      paper-card {
+        --paper-card-background-color: gray;
+        max-width: 500px;
+        margin: 10px;
+        transition: linear .2s;
+      }
+
+      paper-card:hover {
+        @apply(--shadow-elevation-16dp);
+        transition: linear .2s;
+      }
+
+
+      paper-card .pig-image {
+        @apply(--paper-card-header-image);
+      }
+
+      paper-card .card-content {
+        background-color: lightgray;
+        color: black;
+      }
+
+      paper-card .pig-name {
+        @apply(--paper-font-headline);
+      }
+
+      paper-card .pig-price {
+        text-align: right;
+      }
+
+      .pig-price img {
+        padding:0px;
+        margin:0px;
+        display:inline-block;
+        vertical-align:center;
+        text-align:bottom;
+        margin-bottom: -2px;
+      }
     </style>
     <div id="filter">
       <paper-input id="search" invalid=[[!itemCount]]
@@ -66,28 +116,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-dropdown-menu id="sort" label="Sort by"
         selected-item="{{sortBy}}" placeholder="Name">
         <paper-menu class="dropdown-content" selected="0">
-          <paper-item value="name" desc="false">Name</paper-item>
-          <paper-item value="name" desc="true">Name (desc)</paper-item>
-          <paper-item value="weight" desc="false">Weight</paper-item>
-          <paper-item value="weight" desc="true">Weight (desc)</paper-item>
+          <paper-item value="name" desc="false">Name ▲</paper-item>
+          <paper-item value="name" desc="true">Name ▼</paper-item>
+          <paper-item value="weight" desc="false">Weight ▲</paper-item>
+          <paper-item value="weight" desc="true">Weight ▼</paper-item>
+          <paper-item value="price" desc="false">Price ▲</paper-item>
+          <paper-item value="price" desc="true">Price ▼</paper-item>
         </paper-menu>
       </paper-dropdown-menu>
     </div>
-    <table border="1">
+    <div class="pigs">
       <template is="dom-repeat" filter="{{pigSearch(searchValue)}}"
                 items="{{pigsArr}}" rendered-item-count="{{itemCount}}"
                 sort="{{pigSort(sortBy)}}">
-        <a style="display: table-row" href="/pig/[[item.name]]">
-          <tr>
-            <td><div style="display:inline-block"><sl-pig style="display: inline block" width="100" pig="[[item.value]]"></sl-pig></div></td>
-            <td>[[item.value.name]]</td>
-            <td>[[item.value.weight]]</td>
-            <td>[[item.value.price]]</td>
-          </tr>
-        </a>
+        <a class="pig-link" href="/pig/[[item.name]]">
+          <paper-card elevation="3">
+            <div class="pig-image">
+              <sl-pig style="display: inline block" width="250" pig="[[item.value]]"></sl-pig>
+            </div>
+            <div class="card-content">
+              <div class="pig-name">[[item.value.name]]</div>
+              <div class="pig-properities">
+                <div class="pig-weight">
+                  <img src="../images/weight.svg" height="15px"> [[item.value.weight]] lb
+                </div>
+              </div>
 
+            </div>
+            <div class="card-actions">
+              <div class="pig-price">
+                <img src="../images/pound.svg" height="17px">
+                <span class="pig-price-text">[[item.value.price]]</span>
+              </div>
+            </div>
+          </paper-card>
+        </a>
       </template>
-    </table>
+  </div>
   </template>
   <script>
     Polymer({
@@ -117,36 +182,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           string = string.toLowerCase();
           return function(item) {
             return (item.value.name.toLowerCase().indexOf(string) != -1 ||
-                    item.value.weight.toString().indexOf(string) != -1)
+              item.value.weight.toString().indexOf(string) != -1)
           };
         }
       },
 
       pigSort: function(objItem) {
-        if(!objItem) {
-          return function (first, second) {
+        if (!objItem) {
+          return function(first, second) {
             return first.value['name'].localeCompare(second.value['name'])
           }
-        }
-        else {
+        } else {
           // return a sort function for the current search attr
           var attr = objItem.getAttribute('value')
           var desc = objItem.getAttribute('desc') == "false" ? 1 : -1
           return function(first, second) {
-            if(typeof(first.value[attr]) == "string") {
+            if (typeof(first.value[attr]) == "string") {
               return desc * first.value[attr].localeCompare(second.value[attr])
-            }
-            else {
+            } else {
               return desc * (first.value[attr] > second.value[attr] ? 1 : -1)
             }
           };
         }
       },
 
-      _pigsToArr: function(a){
+      _pigsToArr: function(a) {
         var obj = this.pigs
-        arr =[]
-        for(var item in obj) {
+        arr = []
+        for (var item in obj) {
           arr.push({
             name: item,
             value: obj[item]
