@@ -46,15 +46,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     ready: function() {
       this.$.auth.signInAnonymously()
         .then(function(response) {
-          console.log(response)
+          console.log('Signed: ', response)
         })
         .catch(function(error) {
-          console.log(error)
+          console.log('Could\'t be signed: ', error)
         });
     },
 
-      handleError: function(e) {
-      console.log(e)
+    handleError: function(e) {
+      console.log('Error:', e)
     },
 
   });

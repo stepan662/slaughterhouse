@@ -247,9 +247,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.page = 'view404';
       },
 
-      _arrItem: function(arr, item) {
-        return arr[item]
-      }
+      ready: function() {
+        this.$.auth.signInAnonymously()
+          .then(function(response) {
+            console.log('Signed: ', response)
+          })
+          .catch(function(error) {
+            console.log('Could\'t be signed: ', error)
+          });
+      },
+
+      handleError: function(e) {
+        console.log('Error:', e)
+      },
     });
   </script>
 </dom-module>
