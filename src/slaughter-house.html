@@ -141,7 +141,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         pigSelected: {
           type: Object,
-          value: {},
+          computed: '_computePigSelected(pigSelectedId, pigs.*)'
         },
         pigSelectedId: {
           type: String,
@@ -197,6 +197,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         'ressurectPig': '_ressurectPig',
       },
 
+      _computePigSelected: function() {
+        return this.pigs[this.pigSelectedId]
+      },
+
       pigChange: function() {
         console.log(this.pigs)
       },
@@ -217,7 +221,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _routePigIdChanged: function(pigid) {
         if (pigid && this.pigs) {
-          this.pigSelected = this.pigs[pigid]
           this.pigSelectedId = pigid
         }
       },
