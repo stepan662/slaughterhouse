@@ -85,7 +85,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </app-route>
 
     <firebase-app
-      id="auth"
       auth-domain="slaughterhouse-81b78.firebaseapp.com"
       database-url="https://slaughterhouse-81b78.firebaseio.com"
       api-key="AIzaSyDVgVwDr_VZL2LGEFVDTmSUDpUcSpPAVVI">
@@ -147,7 +146,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         pigs: {
           type: Object,
-          observer: 'pigChange',
         }
       },
 
@@ -157,36 +155,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ],
 
       listeners: {
-        'killPig': '_killPig',
-        'ressurectPig': '_ressurectPig',
+        'pigClicked': '_openClosePig',
+      },
+
+      _openClosePig: function(e) {
+        var pig = e.detail.src
+        if(!pig.open) {
+          this.set('pigs.' + this.pigSelectedId + '.open', true)
+        } else if (!pig.dead) {
+          this.set('pigs.' + this.pigSelectedId + '.open', false)
+        }
       },
 
       _computePigSelected: function() {
         return this.pigs[this.pigSelectedId]
       },
 
-      pigChange: function() {
-        console.log(this.pigs)
-      },
 
-      _killPig: function(e) {
-        this.set('pigs.' + this.pigSelectedId + '.state', 'dead')
-        this.notifyPath('pigSelected.state')
-      },
-
-      _ressurectPig: function(e) {
-        this.set('pigs.' + this.pigSelectedId + '.state', 'alive')
-        this.notifyPath('pigSelected.state')
-      },
 
       _routePageChanged: function(page) {
         this.page = page || 'pigs';
       },
 
       _routePigIdChanged: function(pigid) {
-        if (pigid && this.pigs) {
-          this.pigSelectedId = pigid
-        }
+        this.pigSelectedId = pigid
       },
 
       _pageChanged: function(page) {
@@ -214,7 +206,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ready: function() {
         this.$.auth.signInAnonymously()
           .then(function(response) {
-            console.log('Signed: ', response)
+            //signed in ok
           })
           .catch(function(error) {
             console.log('Could\'t be signed: ', error)

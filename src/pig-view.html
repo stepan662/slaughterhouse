@@ -48,7 +48,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <sl-pig pig="{{pig}}" class="card" interactive></sl-pig>
     </div>
     <div id="cart">
-      <template is="dom-if" if="[[_isDead(pig.state)]]">
+      <template is="dom-if" if="true">
         Cart
         <template is="dom-repeat" items="[[cart]]">
           <sl-organ color="[[item.color]]" type="[[item.type]]"></sl-organ>
@@ -78,7 +78,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       listeners: {
-        'organClicked': 'addToCart',
+        'organClicked': 'addToCart'
       },
 
       addToCart: function(e) {
@@ -95,11 +95,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.push('cart', {type: type, color: this.pig.body[type]})
           this.set('pig.body.' + type, false)
         }
-      },
-
-      _isDead: function(state) {
-        return state == 'dead'
-      },
+      }
     });
   </script>
 </dom-module>
