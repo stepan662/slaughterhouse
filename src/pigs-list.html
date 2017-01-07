@@ -69,7 +69,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       paper-card {
-        --paper-card-background-color: gray;
         max-width: 500px;
         margin: 10px;
         transition: linear .2s;
@@ -152,7 +151,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div class="pig-image">
               <sl-pig style="display: inline block" width="250" pig="[[item.value]]"></sl-pig>
               <template is="dom-if" if="[[item.value.inCart]]">
-                <div id='inCart' title="Parts of [[item.value.name]] are in your basket.">
+                <div id='inCart' title="Parts of [[item.value.name]] are in your cart.">
                   <iron-icon icon="icons:shopping-cart"></iron-icon>
                 </div>
               </template>

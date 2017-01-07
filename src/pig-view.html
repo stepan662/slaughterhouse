@@ -9,6 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="sl-pig.html">
 <link rel="import" href="sl-organ.html">
 <link rel="import" href="melon.html">
@@ -29,30 +30,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       #pig {
-        min-width: 300px;
+        min-width: 500px;
         @apply(--layout-flex-7);
-        position: relative;
       }
-      sl-pig {
-        position: absolute;
-        top: 0px;
-        left: 0px;
-      }
+
       #cart {
+        min-width: 400px;
         @apply(--layout-flex-5);
-        @apply(--layout-vertical);
-        @apply(--layout-wrap);
+        padding: 10px;
+      }
+
+      .listItem sl-organ /deep/ svg {
+        height: 50px;
       }
     </style>
     <div id="pig">
-      <sl-pig id=[[pigid]] pig="{{pig}}" class="card" interactive></sl-pig>
+      <sl-pig id=[[pigid]] pig="{{pig}}" interactive></sl-pig>
     </div>
-    <div id="cart">
+    <paper-card id="cart">
       <template is="dom-if" if="true">
-        Cart
-        [[jsonCart]]
+        <h2>Cart</h2>
+        <template is="dom-repeat" items="[[cartList.items]]">
+          <div class="listItem">
+            <sl-organ type="[[item.type]]" color="[[item.color]]"></sl-organ>
+          </div>
+        </template>
+        <template is="dom-if" if="[[cartList.moreItems]]">
+          <div class="">
+            There are more items in your cart ([[cartList.moreItemsCount]]).
+          </div>
+        </template>
       </template>
-    </div>
+    </paper-card>
   </template>
 
   <script>
@@ -64,9 +73,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: {},
           notify: false,
         },
-        pigId: {
+        pigid: {
           type: String,
-          value: '',
         },
         cart: {
           type: Object,
@@ -77,15 +85,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: false,
           notify: true
         },
-        jsonCart: {
-          type: String,
-          computed: '_computeJsonCart(cart.*)'
+        cartList: {
+          type: Object,
+          computed: '_computeCartList(cart.*, pigid)'
         }
       },
 
-      _computeJsonCart: function(obj) {
-        return JSON.stringify(this.cart, null, 2)
-      }
+      _computeCartList: function () {
+        var cartList = {moreItems: false, moreItemsCount: 0, items: []};
+        for(var pigid in this.cart) {
+          for(var organName in this.cart[pigid]) {
+            if(pigid == this.pigid) {
+              cartList.items.push({type: organName, color: this.cart[pigid][organName]})
+            } else {
+              cartList.moreItems = true
+              cartList.moreItemsCount++
+            }
+          }
+        }
+        return cartList
+      },
     });
   </script>
 </dom-module>

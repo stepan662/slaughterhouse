@@ -1,0 +1,72 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="sl-pig.html">
+<link rel="import" href="sl-organ.html">
+<link rel="import" href="melon.html">
+
+<dom-module id="pig-designer">
+  <template>
+    <style include="melon"></style>
+    <style>
+      :host {
+        display: block;
+        padding: 10px;
+      }
+    </style>
+    <div id="pig">
+      <sl-pig pig="[[pig]]"></sl-pig>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'pig-designer',
+      properties: {
+        pig: {
+          type: Object,
+        }
+      },
+
+      ready: function() {
+        if(!this.pig.body) {
+          this.pig = this._randomPig()
+        }
+      },
+
+      _randomPig: function () {
+        return {
+          body: {
+            back: this._randomColor(),
+            belly: this._randomColor(),
+            ham: this._randomColor(),
+            head: this._randomColor(),
+            midbut: this._randomColor(),
+            shoulder: this._randomColor(),
+            tail: this._randomColor(),
+          },
+          name: '',
+          open: false,
+          price: '',
+          weight: '',
+        }
+      },
+
+      _randomColor() {
+        return "#"+((1<<24)*Math.random()|0).toString(16)
+      },
+
+      _initPig: function() {
+        return this._randomPig()
+      },
+    });
+  </script>
+</dom-module>
