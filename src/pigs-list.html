@@ -112,6 +112,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         text-align:bottom;
         margin-bottom: -2px;
       }
+
+      #inCart {
+        position: absolute;
+        right: 4px;
+        top: 4px;
+      }
+
+      #inCart iron-icon {
+        --iron-icon-fill-color: rgb(96, 18, 18);
+        --iron-icon-width: 30px;
+        --iron-icon-height: 30px;
+      }
     </style>
     <div id="filter">
       <paper-input id="search" invalid=[[!itemCount]]
@@ -139,6 +151,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-card elevation="3">
             <div class="pig-image">
               <sl-pig style="display: inline block" width="250" pig="[[item.value]]"></sl-pig>
+              <template is="dom-if" if="[[item.value.inCart]]">
+                <div id='inCart' title="Parts of [[item.value.name]] are in your basket.">
+                  <iron-icon icon="icons:shopping-cart"></iron-icon>
+                </div>
+              </template>
             </div>
             <div class="card-content">
               <div class="pig-name">[[item.value.name]]</div>

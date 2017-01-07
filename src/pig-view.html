@@ -45,14 +45,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
     <div id="pig">
-      <sl-pig pig="{{pig}}" class="card" interactive></sl-pig>
+      <sl-pig id=[[pigid]] pig="{{pig}}" class="card" interactive></sl-pig>
     </div>
     <div id="cart">
       <template is="dom-if" if="true">
         Cart
-        <template is="dom-repeat" items="[[cart]]">
-          <sl-organ color="[[item.color]]" type="[[item.type]]"></sl-organ>
-        </template>
+        [[jsonCart]]
       </template>
     </div>
   </template>
@@ -66,35 +64,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: {},
           notify: false,
         },
+        pigId: {
+          type: String,
+          value: '',
+        },
         cart: {
-          type: Array,
-          value: []
+          type: Object,
+          value: {},
         },
         active: {
           type: Boolean,
           value: false,
           notify: true
+        },
+        jsonCart: {
+          type: String,
+          computed: '_computeJsonCart(cart.*)'
         }
       },
 
-      listeners: {
-        'organClicked': 'addToCart'
-      },
-
-      addToCart: function(e) {
-        if(this.pig.state == 'dead') {
-          var type = e.detail.type
-          if(!this.active) {
-            this.active = true
-            // clone object for local needs
-            this.set('pig', JSON.parse(JSON.stringify(this.pig)))
-          }
-          if(this.pig.body[type] == false) {
-            return
-          }
-          this.push('cart', {type: type, color: this.pig.body[type]})
-          this.set('pig.body.' + type, false)
-        }
+      _computeJsonCart: function(obj) {
+        return JSON.stringify(this.cart, null, 2)
       }
     });
   </script>

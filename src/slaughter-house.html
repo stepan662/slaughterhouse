@@ -23,6 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="my-icons.html">
 <link rel="import" href="melon.html">
 
@@ -97,6 +98,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       data="{{pigs}}">
     </firebase-document>
 
+    <iron-localstorage
+      value="{{cart}}"
+      on-iron-localstorage-load-empty="_initCart">
+    </iron-localstorage>
+
     <app-drawer-layout fullbleed>
 
       <!-- Main content -->
@@ -108,18 +114,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div main-title>Slaughterhouse</div>
           </app-toolbar>
         </app-header>
-
         <iron-pages
             id="pages"
             selected="[[page]]"
             attr-for-selected="name"
             fallback-selection="view404"
             role="main">
-          <pigs-list name="pigs" pigs=[[pigs]]></pigs-list>
+          <pigs-list name="pigs" pigs="[[localPigs]]"></pigs-list>
           <pig-view
               name="pig"
-              pig=[[pigSelected]]
-              on-killPig="_killPig"></pig-view>
+              pig="[[pigSelected]]"
+              pigid="[[pigSelectedId]]"
+              cart="[[cart]]"
+              on-killPig="_killPig">
+          </pig-view>
           <my-view3 name="view3"></my-view3>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
@@ -138,7 +146,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         pigSelected: {
           type: Object,
-          computed: '_computePigSelected(pigSelectedId, pigs.*)'
+          computed: '_computePigSelected(pigSelectedId, localPigs.*)'
         },
         pigSelectedId: {
           type: String,
@@ -146,32 +154,78 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         pigs: {
           type: Object,
+        },
+        cart: {
+          type: Object,
+        },
+        localPigs: {
+          type: Object,
+          computed: '_computeLocalPigs(cart.*, pigs.*)'
         }
       },
 
       observers: [
         '_routePageChanged(routeData.page)',
-        '_routePigIdChanged(subrouteData.pigid)'
+        '_routePigIdChanged(subrouteData.pigid)',
       ],
 
       listeners: {
-        'pigClicked': '_openClosePig',
+        'pigClicked': 'openClosePig',
+        'pigOrganClicked': 'addToCart',
       },
 
-      _openClosePig: function(e) {
-        var pig = e.detail.src
+      openClosePig: function(e) {
+        var pig = e.detail.src.pig
+        var id = e.detail.src.id
         if(!pig.open) {
-          this.set('pigs.' + this.pigSelectedId + '.open', true)
+          this.set('pigs.' + id + '.open', true)
         } else if (!pig.dead) {
-          this.set('pigs.' + this.pigSelectedId + '.open', false)
+          this.set('pigs.' + id + '.open', false)
         }
       },
 
-      _computePigSelected: function() {
-        return this.pigs[this.pigSelectedId]
+      addToCart: function(e) {
+        var pigId = e.detail.pig.id
+        var type = e.detail.organ.type
+        var color = e.detail.organ.color
+
+        if(!this.cart[pigId]) {
+          this.set('cart.' + pigId, {})
+        }
+
+        if(!this.cart[pigId][type]) {
+          this.set('cart.' + pigId + '.' + type, color)
+        }
       },
 
 
+
+
+      _computeLocalPigs: function() {
+        //combine local and firebase data
+
+        if(Object.keys(this.pigs).length == 0 || !this.cart)
+          return {}
+
+        //copy json object
+        var pigs = JSON.parse(JSON.stringify(this.pigs));
+        for(var cartPigId in this.cart) {
+          var cartPig = this.cart[cartPigId]
+          pigs[cartPigId].inCart = true
+          for(var organName in cartPig) {
+            pigs[cartPigId]['body'][organName] = null
+          }
+        }
+        return pigs
+      },
+
+      _computePigSelected: function() {
+        return this.localPigs[this.pigSelectedId]
+      },
+
+      _initCart: function() {
+        this.cart = {}
+      },
 
       _routePageChanged: function(page) {
         this.page = page || 'pigs';
