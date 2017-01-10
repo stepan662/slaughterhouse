@@ -18,6 +18,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style>
       :host {
         display: block;
+        position: relative;
+      }
+      svg{
+        transform-origin: 0% 0%;
+        position: absolute;
       }
     </style>
     <iron-pages
@@ -172,16 +177,73 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'sl-organ',
       properties: {
         type: {
-          type: String
+          type: String,
+          observer: '_scale'
         },
         color: {
           type: String
+        },
+        width: {
+          type: Number,
+          value: false,
+          observer: '_scale',
+        },
+        height: {
+          type: Number,
+          value: false,
+          observer: '_scale'
+        },
+        fit:{
+          type: Boolean,
+          value: false,
+          observer: '_scale'
         }
       },
 
       _organClicked: function(e) {
         this.fire('organClicked', {organ: this})
+      },
+
+      _scale: function() {
+        if(!this.type)
+          return
+
+        var width = this.$[this.type].width.baseVal.value
+        var height = this.$[this.type].height.baseVal.value
+        if(this.height && this.width && this.fit) {
+          //fit into specified width and height
+          var newWidth = (this.height/height) * width
+          var newHeight = (this.width/width) * height
+          if(newWidth <= this.width) {
+            newHeight = (newWidth/width) * height
+            this.$[this.type].style.left = (this.width - newWidth) / 2
+          } else {
+            newWidth = (newHeight/height) * width
+            this.$[this.type].style.top = (this.height - newHeight) / 2
+          }
+          this.$[this.type].style.transform = 'scale('
+                  + (newWidth/width) + ', ' + newHeight/height + ')';
+          this.style.width = this.width + 'px'
+          this.style.height = this.height + 'px'
+        } else {
+          //transform by specified height and width
+          if(this.height || this.width) {
+            this.style.height = this.height + 'px'
+            if(!this.width) {
+              this.width = (this.height/height) * width
+            } else if (!this.height) {
+              this.height = (this.width/width) * height
+            }
+            this.$[this.type].style.transform = 'scale('
+                    + (this.width/width) + ', ' + this.height/height + ')';
+          }
+          this.style.width = this.width + 'px'
+          this.style.height = this.height + 'px'
+        }
+
       }
+
+
     });
   </script>
 </dom-module>

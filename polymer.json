@@ -4,7 +4,8 @@
   "fragments": [
     "src/pigs-list.html",
     "src/pig-view.html",
-    "src/my-view3.html",
+    "src/sl-cart.html",
+    "src/pig-designer.html",
     "src/my-view404.html"
   ],
   "sourceGlobs": [

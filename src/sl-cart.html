@@ -1,0 +1,170 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="melon.html">
+<link rel="import" href="sl-organ.html">
+
+<dom-module id="sl-cart">
+  <template>
+    <style include="melon"></style>
+    <style>
+      :host {
+        display: block;
+        padding: 10px;
+      }
+
+      #cart {
+        min-width: 400px;
+        overflow: hidden;
+        display: block;
+      }
+
+      .list {
+        padding: 5px 10px 5px 10px
+      }
+
+      .listItem + .listItem {
+        border-top: 1px solid #d2d2d2;
+      }
+
+      .listItem {
+        padding: 5px 6px 5px 6px;
+        max-height: 50px;
+        overflow: hidden;
+      }
+
+      .listItem .organ {
+        position: relative;
+        top: 2px;
+        left: 3px;
+        display: block;
+        float: left;
+      }
+
+      .listItem .organName {
+        display: block;
+        float: left;
+        margin: 15px;
+      }
+
+      .listItem .organRemove {
+        margin: 4px;
+        float: right;
+      }
+
+      .listItem .organ sl-organ{
+        display: inline-block;
+        max-height: 50px;
+        max-width: 70px;
+      }
+
+      paper-card .card-content {
+        background-color: lightgray;
+        color: black;
+        border-bottom: 1px solid rgba(96, 18, 18, 1);
+        @apply(--paper-font-headline);
+        position: relative;
+      }
+
+      paper-card .allLink{
+        float: right;
+        font-size: 17px;
+      }
+
+      paper-card .buyButton {
+        display: inline-block;
+        float: right;
+        font-size: 17px;
+        top: -8px;
+        padding: 8px 8px 8px 8px;
+        background-color: gray;
+        --paper-button-ink-color: red;
+      }
+    </style>
+    <paper-card id="cart">
+        <div class="card-content">
+          Cart
+          <template is="dom-if" if="[[buyButton]]">
+            <paper-button on-tap="buyClicked" class="buyButton">Kill & Buy</paper-button>
+          </template>
+        </div>
+        <div class="list">
+          <template is="dom-repeat" items="[[cartList.items]]">
+            <div class="listItem">
+              <div class="organ">
+                <sl-organ height="50" width="60" fit type="[[item.type]]" color="[[item.color]]"></sl-organ>
+              </div>
+              <div class="organName">
+                [[item.type]]
+              </div>
+              <paper-button on-tap="removeClicked" pig-id$="[[item.pigid]]" organ-type$="[[item.type]]" class="organRemove">
+                Remove
+              </paper-button>
+            </div>
+          </template>
+        </div>
+    </paper-card>
+  </template>
+  <script>
+    Polymer({
+      is: 'sl-cart',
+      properties: {
+        cart: {
+          type: Object,
+          value: {},
+        },
+        cartList: {
+          type: Object,
+          computed: '_computeCartList(cart.*, pigid)'
+        },
+        pigid: {
+          type: String,
+          value: null,
+        },
+        buyButton: {
+          type: Boolean,
+          computed: '_computeBuyButton(cart.*, cartList)',
+        }
+      },
+
+      removeClicked: function(e) {
+        var organType = e.srcElement.getAttribute('organ-type')
+        var pigId = e.srcElement.getAttribute('pig-id')
+        this.fire('cartRemoveItem', {pig: pigId, organ: organType})
+      },
+
+      buyClicked: function(e) {
+        this.fire('cartBuy')
+      },
+
+      _computeCartList: function () {
+        var cartList = {moreItems: false, moreItemsCount: 0, items: []};
+        for(var pigid in this.cart) {
+          for(var organName in this.cart[pigid]) {
+            if(pigid == this.pigid || this.pigid == null) {
+              cartList.items.push({pigid: pigid, type: organName, color: this.cart[pigid][organName]})
+            }
+          }
+        }
+        return cartList
+      },
+
+      _computeBuyButton: function() {
+        return (this.pigid == null && this.cartList.items.length != 0)
+      },
+    });
+  </script>
+</dom-module>

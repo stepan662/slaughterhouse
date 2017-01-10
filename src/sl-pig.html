@@ -189,6 +189,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
       _computeBodyArr: function(){
+        if(!this.pig) {
+          return []
+        }
         var organs = this.pig.body
         arr =[]
         for(var item in organs) {

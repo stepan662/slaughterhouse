@@ -24,7 +24,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
-<link rel="import" href="my-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="sl-cart.html">
+<link rel="import" href="sl-overview.html">
 <link rel="import" href="melon.html">
 
 <dom-module id="slaughter-house">
@@ -34,7 +38,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       :host {
         --app-primary-color: #131313;
         --app-secondary-color: gray ;
-
         display: block;
       }
 
@@ -70,6 +73,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: black;
         font-weight: bold;
       }
+      .cart {
+        display: inline-block;
+      }
+
+      .cartIcon {
+        text-decoration: none !important;
+      }
+
+      .itemCountActive {
+        padding-right: 3px;
+        font-weight: bold;
+      }
+
+      .itemCountNone {
+        display: none;
+      }
+
+      .mainTitle {
+        padding-left: 8px;
+      }
+
     </style>
 
     <app-location route="{{route}}"></app-location>
@@ -86,14 +110,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </app-route>
 
     <firebase-app
+      id="firebaseapp"
+      app="{{firebase}}"
       auth-domain="slaughterhouse-81b78.firebaseapp.com"
       database-url="https://slaughterhouse-81b78.firebaseio.com"
       api-key="AIzaSyDVgVwDr_VZL2LGEFVDTmSUDpUcSpPAVVI">
     </firebase-app>
 
-    <firebase-auth id="auth" provider="anonymous" on-error="handleError">
+    <firebase-auth
+      id="auth"
+      provider="anonymous"
+      on-error="handleError">
     </firebase-auth>
     <firebase-document
+      id="document"
       path="/pigs"
       data="{{pigs}}">
     </firebase-document>
@@ -103,15 +133,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       on-iron-localstorage-load-empty="_initUser">
     </iron-localstorage>
 
+    <sl-overview id="dialog"></sl-overview>
+
     <app-drawer-layout fullbleed>
 
       <!-- Main content -->
       <app-header-layout has-scrolling-region>
-
         <app-header fixed shadow>
           <app-toolbar>
-            <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-            <div main-title>Slaughterhouse</div>
+            <template is="dom-if" if="[[backButton]]">
+              <a href="/">
+                <paper-icon-button class="backButton" icon="icons:arrow-back"></paper-icon-button>
+              </a>
+            </template>
+            <div class="mainTitle" main-title>[[pageTitle]]</div>
+            <a class="cartIcon" href="/cart">
+              <paper-button>
+                <div class$="[[cartItemClass]]">[[cartItemCount]]</div>
+                <iron-icon class$=[[cartItemClass]] icon="icons:shopping-cart"></iron-icon>
+              </paper-button>
+            </a>
           </app-toolbar>
         </app-header>
         <iron-pages
@@ -129,6 +170,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               on-killPig="_killPig">
           </pig-view>
           <pig-designer pig="{{user.pigDesigned}}" name="designer"></pig-designer>
+          <sl-cart name='cart' cart="[[user.cart]]"></sl-cart>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
       </app-header-layout>
@@ -143,6 +185,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: String,
           reflectToAttribute: true,
           observer: '_pageChanged'
+        },
+        pageTitle: {
+          type: String,
+          computed: '_computePageTitle(page)',
         },
         pigSelected: {
           type: Object,
@@ -161,6 +207,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         localPigs: {
           type: Object,
           computed: '_computeLocalPigs(user.*, pigs.*)'
+        },
+        firebase: {
+          type: Object,
+          observer: '_firebaseObserver',
+        },
+        connected: {
+          type: Boolean,
+          value: false,
+        },
+        cartItemCount: {
+          type: Object,
+          computed: '_computeCartItemCount(user.cart.*)'
+        },
+        cartItemClass: {
+          type: String,
+          value: 'itemCountActive'
+        },
+        backButton: {
+          type: Boolean,
+          computed: '_computeBackButton(page)'
         }
       },
 
@@ -172,6 +238,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       listeners: {
         'pigClicked': 'openClosePig',
         'pigOrganClicked': 'addToCart',
+        'cartRemoveItem': 'removeFromCart',
+        'cartBuy': 'cartBuy',
       },
 
       openClosePig: function(e) {
@@ -199,6 +267,64 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       },
 
+      removeFromCart: function(e) {
+        var pigId = e.detail.pig
+        var organ = e.detail.organ
+
+        if(this.user.cart[pigId] && this.user.cart[pigId][organ]) {
+          var newItem = JSON.parse(JSON.stringify(this.user.cart[pigId]));
+          delete newItem[organ]
+          this.set('user.cart.' + pigId, newItem)
+          if(Object.keys(newItem).length == 0) {
+            var newCart = JSON.parse(JSON.stringify(this.user.cart));
+            delete newCart[pigId]
+            this.set('user.cart', newCart)
+          }
+        }
+      },
+
+      cartBuy: function(e) {
+        var cart = JSON.parse(JSON.stringify(this.user.cart))
+        this.set('user.cart', {})
+        var overview = {
+          itemsCount: 0,
+          pigsKilled: 0,
+          pigsVounded: 0,
+        }
+        for(var pigid in cart) {
+          var orgCountBefore = 0;
+          for(var organ in this.pigs[pigid].body) {
+            if (this.pigs[pigid].body[organ] != null) {
+              orgCountBefore++;
+            }
+          }
+          for(var organType in cart[pigid]) {
+            this.set('pigs.' + pigid + '.body.' + organType, null)
+            overview.itemsCount++;
+          }
+          var orgCountAfter = 0;
+          for(var organ in this.pigs[pigid].body) {
+            if (this.pigs[pigid].body[organ] != null) {
+              orgCountAfter++;
+            }
+          }
+          if(orgCountAfter == 0) {
+            this.set('pigs.' + pigid, null)
+          }
+          if(orgCountBefore > orgCountAfter) {
+            if(orgCountBefore == 7) {
+              overview.pigsKilled++
+            } else {
+              overview.pigsVounded++
+            }
+          }
+        }
+        this.set('route.path', '/pigs');
+        this.temp = cart;
+        this.$.dialog.overview = overview;
+        this.$.dialog.open()
+      },
+
 
 
       _computeLocalPigs: function() {
@@ -208,7 +334,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return {}
 
         //copy json object
-        var pigs = JSON.parse(JSON.stringify(this.pigs));
+        var pigs = {}
+
+
+        for(var pigid in this.pigs) {
+          if(this.pigs[pigid] != null) {
+            pigs[pigid] = JSON.parse(JSON.stringify(this.pigs[pigid]));
+          }
+        }
+
         for(var cartPigId in this.user.cart) {
           var cartPig = this.user.cart[cartPigId]
           pigs[cartPigId].inCart = true
@@ -219,8 +353,45 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return pigs
       },
 
+
+      _computeCartItemCount: function() {
+        var cart = this.user.cart;
+        var count = 0;
+        for(var pigid in cart) {
+          var pig = cart[pigid];
+          for(var organ in pig) {
+            count++
+          }
+        }
+        if(count > 0) {
+          this.cartItemClass = 'itemCountActive'
+        } else {
+          this.cartItemClass = 'itemCountNone'
+        }
+        return count
+      },
+
       _computePigSelected: function() {
         return this.localPigs[this.pigSelectedId]
+      },
+
+      _computeBackButton: function() {
+        return (this.page != 'pigs')
+      },
+
+      _computePageTitle: function() {
+        switch (this.page) {
+          case 'pigs':
+            return 'Slaughterhouse'
+          case 'cart':
+            return 'Cart'
+          case 'designer':
+            return 'Create new pig'
+          case 'pig':
+            return 'Pig detail'
+          default:
+            return ''
+        }
       },
 
       _initUser: function() {
@@ -248,6 +419,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           case 'designer':
             url = 'pig-designer';
             break;
+          case 'cart':
+            return;
+          default:
+            url = 'view404'
         }
         var resolvedPageUrl = this.resolveUrl(url + '.html');
         this.importHref(resolvedPageUrl, null, this._showPage404, true);
@@ -258,9 +433,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       ready: function() {
+        var that = this
         this.$.auth.signInAnonymously()
           .then(function(response) {
-            //signed in ok
           })
           .catch(function(error) {
             console.log('Could\'t be signed: ', error)
@@ -269,6 +444,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       handleError: function(e) {
         console.log('Error:', e)
+      },
+
+      _firebaseObserver: function(firebase) {
+        var connectedRef = firebase.database().ref(".info/connected");
+        var that = this
+        connectedRef.on("value", function(snap) {
+          if (snap.val() === true) {
+            that.connected = true
+          } else {
+            that.connected = false
+          }
+        });
       },
     });
   </script>

@@ -1,0 +1,90 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="melon.html">
+
+<dom-module id="sl-overview">
+  <template>
+    <style include="melon"></style>
+    <style>
+      :host {
+        display: block;
+        padding: 10px;
+      }
+
+      #cart {
+        min-width: 400px;
+        overflow: hidden;
+        display: block;
+        line-height: 1.2;
+        background-color: #6d8671;
+        background-image: url('/images/bloodDrops.png');
+        background-repeat: repeat-x;
+        background-position: top;
+        background-size: 100px;
+        padding: 60px 20px 20px 20px;
+      }
+
+      .heading {
+        font-size: 30px;
+        margin: 10px 0px 10px 0px
+      }
+
+      .summary {
+        font-size: 17px;
+      }
+
+      .summary span {
+        color: rgba(96, 18, 18, 1);
+      }
+
+      .buttons paper-button {
+        color: #6d8671;
+        background: rgba(96, 18, 18, 1);
+      }
+    </style>
+    <paper-dialog id="cart" modal alwaysOnTop="true">
+        <div class="heading">
+          Thank you for shopping in Slaughterhouse e-shop
+        </div>
+        <div class="summary">
+          You have bought [[overview.itemsCount]] items.
+          <br>
+          [[overview.pigsKilled]] pigs will be <span>killed</span>, [[overview.pigsVounded]] wounded.
+          <br>
+          We will let them <span>suffer</span>.
+        </div>
+        <div class="buttons">
+          <paper-button dialog-confirm autofocus>Viva cruelty!</paper-button>
+        </div>
+    </paper-dialog>
+  </template>
+  <script>
+    Polymer({
+      is: 'sl-overview',
+      properties: {
+        overview: {
+          type: Object,
+          value: {},
+        }
+      },
+      open: function() {
+        this.$.cart.open()
+      }
+    });
+  </script>
+</dom-module>

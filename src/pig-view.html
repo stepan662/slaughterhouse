@@ -10,8 +10,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="sl-pig.html">
-<link rel="import" href="sl-organ.html">
+<link rel="import" href="sl-cart.html">
 <link rel="import" href="melon.html">
 
 <dom-module id="pig-view">
@@ -33,35 +36,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         min-width: 500px;
         @apply(--layout-flex-7);
       }
-
-      #cart {
-        min-width: 400px;
+      sl-cart {
         @apply(--layout-flex-5);
-        padding: 10px;
       }
 
-      .listItem sl-organ /deep/ svg {
-        height: 50px;
-      }
     </style>
     <div id="pig">
       <sl-pig id=[[pigid]] pig="{{pig}}" interactive></sl-pig>
     </div>
-    <paper-card id="cart">
-      <template is="dom-if" if="true">
-        <h2>Cart</h2>
-        <template is="dom-repeat" items="[[cartList.items]]">
-          <div class="listItem">
-            <sl-organ type="[[item.type]]" color="[[item.color]]"></sl-organ>
-          </div>
-        </template>
-        <template is="dom-if" if="[[cartList.moreItems]]">
-          <div class="">
-            There are more items in your cart ([[cartList.moreItemsCount]]).
-          </div>
-        </template>
-      </template>
-    </paper-card>
+    <sl-cart cart="[[cart]]" pigid="[[pigid]]"></sl-cart>
   </template>
 
   <script>
@@ -85,25 +68,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: false,
           notify: true
         },
-        cartList: {
-          type: Object,
-          computed: '_computeCartList(cart.*, pigid)'
-        }
-      },
-
-      _computeCartList: function () {
-        var cartList = {moreItems: false, moreItemsCount: 0, items: []};
-        for(var pigid in this.cart) {
-          for(var organName in this.cart[pigid]) {
-            if(pigid == this.pigid) {
-              cartList.items.push({type: organName, color: this.cart[pigid][organName]})
-            } else {
-              cartList.moreItems = true
-              cartList.moreItemsCount++
-            }
-          }
-        }
-        return cartList
       },
     });
   </script>
