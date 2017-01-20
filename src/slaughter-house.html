@@ -27,6 +27,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="sl-cart.html">
 <link rel="import" href="sl-overview.html">
 <link rel="import" href="melon.html">
@@ -94,6 +95,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding-left: 8px;
       }
 
+      paper-fab {
+        position: absolute;
+        bottom: 30px;
+        right: 40px;
+      }
+
     </style>
 
     <app-location route="{{route}}"></app-location>
@@ -141,7 +148,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-header-layout has-scrolling-region>
         <app-header fixed shadow>
           <app-toolbar>
-            <template is="dom-if" if="[[backButton]]">
+            <template is="dom-if" if="[[!pageIsPigs]]">
               <a href="/">
                 <paper-icon-button class="backButton" icon="icons:arrow-back"></paper-icon-button>
               </a>
@@ -170,10 +177,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               on-killPig="_killPig">
           </pig-view>
           <pig-designer pig="{{user.pigDesigned}}" name="designer"></pig-designer>
-          <sl-cart name='cart' cart="[[user.cart]]"></sl-cart>
+          <sl-cart name='cart' online="[[connected]]" cart="[[user.cart]]"></sl-cart>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
       </app-header-layout>
+      <template is="dom-if" if="[[pageIsPigs]]">
+        <a href="/designer">
+          <paper-fab icon="icons:add"></paper-fab>
+        </a>
+      </template>
     </app-drawer-layout>
   </template>
   <script>
@@ -224,9 +236,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: String,
           value: 'itemCountActive'
         },
-        backButton: {
+        pageIsPigs: {
           type: Boolean,
-          computed: '_computeBackButton(page)'
+          computed: '_computePageIsPigs(page)'
         }
       },
 
@@ -240,6 +252,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         'pigOrganClicked': 'addToCart',
         'cartRemoveItem': 'removeFromCart',
         'cartBuy': 'cartBuy',
+        'addPig': 'addPig'
       },
 
       openClosePig: function(e) {
@@ -264,7 +277,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if(!this.user.cart[pigId][type]) {
           this.set('user.cart.' + pigId + '.' + type, color)
         }
-
       },
 
       removeFromCart: function(e) {
@@ -325,6 +337,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.dialog.open()
       },
 
+      addPig: function(e) {
+        var pig = JSON.parse(JSON.stringify(e.detail.pig))
+        var bigestIndex = 0
+        for(var i in this.pigs) {
+          if(i > bigestIndex) {
+            bigestIndex = i
+          }
+        }
+        bigestIndex += 1
+        console.log(bigestIndex)
+        this.set('pigs.' + bigestIndex, pig)
+        this.set('user.pigDesigned', {})
+        this.set('route.path', '/pigs');
+      },
+
 
 
       _computeLocalPigs: function() {
@@ -375,8 +402,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return this.localPigs[this.pigSelectedId]
       },
 
-      _computeBackButton: function() {
-        return (this.page != 'pigs')
+      _computePageIsPigs: function() {
+        return (this.page == 'pigs')
       },
 
       _computePageTitle: function() {

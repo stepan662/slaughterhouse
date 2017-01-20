@@ -27,7 +27,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       #cart {
-        min-width: 400px;
+        min-width: 300px;
         overflow: hidden;
         display: block;
       }
@@ -95,33 +95,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
     <paper-card id="cart">
-        <div class="card-content">
-          Cart
-          <template is="dom-if" if="[[buyButton]]">
-            <paper-button on-tap="buyClicked" class="buyButton">Kill & Buy</paper-button>
-          </template>
-        </div>
-        <div class="list">
-          <template is="dom-repeat" items="[[cartList.items]]">
-            <div class="listItem">
-              <div class="organ">
-                <sl-organ height="50" width="60" fit type="[[item.type]]" color="[[item.color]]"></sl-organ>
-              </div>
-              <div class="organName">
-                [[item.type]]
-              </div>
-              <paper-button on-tap="removeClicked" pig-id$="[[item.pigid]]" organ-type$="[[item.type]]" class="organRemove">
-                Remove
-              </paper-button>
+      <div class="card-content">
+        Cart
+        <template is="dom-if" if="[[buyButton]]">
+          <paper-button disabled="[[!online]]" on-tap="buyClicked" class="buyButton">Kill & Buy</paper-button>
+        </template>
+      </div>
+      <div class="list">
+        <template is="dom-repeat" items="[[cartList.items]]">
+          <div class="listItem">
+            <div class="organ">
+              <sl-organ height="50" width="60" fit type="[[item.type]]" color="[[item.color]]"></sl-organ>
             </div>
-          </template>
-        </div>
+            <div class="organName">
+              [[item.type]]
+            </div>
+            <paper-button on-tap="removeClicked" pig-id$="[[item.pigid]]" organ-type$="[[item.type]]" class="organRemove">
+              Remove
+            </paper-button>
+          </div>
+        </template>
+      </div>
     </paper-card>
   </template>
   <script>
     Polymer({
       is: 'sl-cart',
       properties: {
+        online: {
+          type: Boolean,
+          value: false,
+        },
         cart: {
           type: Object,
           value: {},

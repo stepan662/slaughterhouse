@@ -159,8 +159,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
       organClicked: function(e) {
-        e.stopPropagation()
         if(this.interactive && this.pig.open) {
+          e.stopPropagation()
           var detail = {organ: e.detail.organ, pig: this}
           this.fire('pigOrganClicked', detail)
         }

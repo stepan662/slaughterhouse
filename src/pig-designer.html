@@ -9,6 +9,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-swatch-picker/paper-swatch-picker.html">
 <link rel="import" href="sl-pig.html">
 <link rel="import" href="sl-organ.html">
 <link rel="import" href="melon.html">
@@ -20,11 +24,138 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       :host {
         display: block;
         padding: 10px;
+        @apply(--layout-horizontal);
+        @apply(--layout-wrap);
       }
+
+      #pig {
+        min-width: 300px;
+        @apply(--layout-flex-7);
+        margin: 10px;
+      }
+
+      #pig sl-pig {
+        margin: 0px auto;
+      }
+
+      paper-card {
+        min-width: 300px;
+        overflow: hidden;
+        display: block;
+        margin: 10px;
+        @apply(--layout-flex-5);
+      }
+
+      paper-card .card-content {
+        background-color: lightgray;
+        color: black;
+        border-bottom: 1px solid rgba(96, 18, 18, 1);
+        @apply(--paper-font-headline);
+        position: relative;
+      }
+
+      paper-card .card-container {
+        padding: 16px;
+      }
+
+      .card-row {
+        position: relative;
+        display: block;
+        margin-bottom: 3px;
+        color: black;
+      }
+
+      paper-swatch-picker {
+        background-color: #2a363b;
+        border-radius: 50%;
+        padding: 0px;
+        --paper-swatch-picker-icon: {
+          color: black;
+        }
+      }
+
+      #pig paper-input {
+        margin-right: 15px;
+        margin-left: 15px;
+        --paper-input-container-color: black;
+        --paper-input-container-input-color: black;
+      }
+
+      #pig .properties {
+        background-color: lightgray;
+        color: black;
+        border-bottom: 1px solid rgba(96, 18, 18, 1);
+        border-radius: 2px;
+        position: relative;
+        padding-bottom: 10px;
+      }
+
+      .card-name {
+        margin-top: 15px;
+        display: inline-block;
+        margin-left: 60%;
+      }
+
+      paper-card .buyButton {
+        display: inline-block;
+        float: right;
+        font-size: 17px;
+        top: -8px;
+        padding: 8px 8px 8px 8px;
+        background-color: rgb(171, 58, 50);
+        text-align: center;
+        --paper-button-ink-color: red;
+      }
+
+      #randomColors {
+        text-align: center;
+      }
+
+      #randomColors paper-button {
+        background: #6d6d6d;
+      }
+
     </style>
     <div id="pig">
-      <sl-pig pig="[[pig]]"></sl-pig>
+      <sl-pig width="400" pig="[[pig]]"></sl-pig>
+      <div class="properties">
+        <paper-input autoValidate=true type="text" label="Name" value={{pig.name}}></paper-input>
+        <paper-input max="500" min="50" type="number" label="Price" value={{pig.price}}></paper-input>
+        <paper-input validator="_weightValidator" type="number" label="Weight" value={{pig.weight}}></paper-input>
+      </div>
     </div>
+    <paper-card id="cart">
+      <div class="card-content">
+        Pig colors
+        <paper-button on-tap="addPig" class="buyButton">Add Pig</paper-button>
+      </div>
+      <div class="card-container">
+        <div class="card-row">
+          <paper-swatch-picker id="head" color="{{pig.body.head}}"></paper-swatch-picker><div class="card-name">Head</div>
+        </div>
+        <div class="card-row">
+          <paper-swatch-picker id="shoulder" color="{{pig.body.shoulder}}"></paper-swatch-picker><div class="card-name">Shoulder</div>
+        </div>
+        <div class="card-row">
+          <paper-swatch-picker id="back" color="{{pig.body.back}}"></paper-swatch-picker><div class="card-name">Back</div>
+        </div>
+        <div class="card-row">
+          <paper-swatch-picker id="midbut" color="{{pig.body.midbut}}"></paper-swatch-picker><div class="card-name">Midbut</div>
+        </div>
+        <div class="card-row">
+          <paper-swatch-picker id="belly" color="{{pig.body.belly}}"></paper-swatch-picker><div class="card-name">Belly</div>
+        </div>
+        <div class="card-row">
+          <paper-swatch-picker id="ham" color="{{pig.body.ham}}"></paper-swatch-picker><div class="card-name">Ham</div>
+        </div>
+        <div class="card-row">
+          <paper-swatch-picker id="tail" color="{{pig.body.tail}}"></paper-swatch-picker><div class="card-name">Tail</div>
+        </div>
+        <div class="card-row" id="randomColors">
+          <paper-button on-tap="generateRandomPig">Random colors</paper-button>
+        </div>
+      </div>
+    </paper-card>
   </template>
 
   <script>
@@ -33,10 +164,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties: {
         pig: {
           type: Object,
+          notify: true,
+          observer: '_pigObserver',
+        },
+
+        formStat: {
+          type: Object,
+          computed: '_computeFormStat(pig.*)'
         }
       },
 
-      ready: function() {
+      listeners: {
+        'organClicked': 'organClicked',
+      },
+
+      _pigObserver: function() {
+        console.log(this.pig.body)
         if(!this.pig.body) {
           this.pig = this._randomPig()
         }
@@ -60,13 +203,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      _randomColor() {
-        return "#"+((1<<24)*Math.random()|0).toString(16)
+      addPig: function() {
+        this.fire('addPig', {pig: this.pig})
       },
 
-      _initPig: function() {
-        return this._randomPig()
+      generateRandomPig: function() {
+        this.set('pig.body', {
+            back: this._randomColor(),
+            belly: this._randomColor(),
+            ham: this._randomColor(),
+            head: this._randomColor(),
+            midbut: this._randomColor(),
+            shoulder: this._randomColor(),
+            tail: this._randomColor(),
+          });
       },
+
+
+
+      _randomColor: function() {
+        return this.colors[~~(Math.random() * this.colors.length)];
+      },
+
+      organClicked: function(e) {
+        this.$[e.detail.organ.type].$$('paper-menu-button').open()
+      },
+
+      colors: ['#ffebee', '#ffcdd2', '#ef9a9a', '#e57373', '#ef5350', '#f44336', '#e53935', '#d32f2f', '#c62828', '#b71c1c', '#fce4ec', '#f8bbd0', '#f48fb1', '#f06292', '#ec407a', '#e91e63', '#d81b60', '#c2185b', '#ad1457', '#880e4f', '#f3e5f5', '#e1bee7', '#ce93d8', '#ba68c8', '#ab47bc', '#9c27b0', '#8e24aa', '#7b1fa2', '#6a1b9a', '#4a148c', '#ede7f6', '#d1c4e9', '#b39ddb', '#9575cd', '#7e57c2', '#673ab7', '#5e35b1', '#512da8', '#4527a0', '#311b92', '#e8eaf6', '#c5cae9', '#9fa8da', '#7986cb', '#5c6bc0', '#3f51b5', '#3949ab', '#303f9f', '#283593', '#1a237e', '#e3f2fd', '#bbdefb', '#90caf9', '#64b5f6', '#42a5f5', '#2196f3', '#1e88e5', '#1976d2', '#1565c0', '#0d47a1', '#e1f5fe', '#b3e5fc', '#81d4fa', '#4fc3f7', '#29b6f6', '#03a9f4', '#039be5', '#0288d1', '#0277bd', '#01579b', '#e0f7fa', '#b2ebf2', '#80deea', '#4dd0e1', '#26c6da', '#00bcd4', '#00acc1', '#0097a7', '#00838f', '#006064', '#e0f2f1', '#b2dfdb', '#80cbc4', '#4db6ac', '#26a69a', '#009688', '#00897b', '#00796b', '#00695c', '#004d40', '#e8f5e9', '#c8e6c9', '#a5d6a7', '#81c784', '#66bb6a', '#4caf50', '#43a047', '#388e3c', '#2e7d32', '#1b5e20', '#f1f8e9', '#dcedc8', '#c5e1a5', '#aed581', '#9ccc65', '#8bc34a', '#7cb342', '#689f38', '#558b2f', '#33691e', '#f9fbe7', '#f0f4c3', '#e6ee9c', '#dce775', '#d4e157', '#cddc39', '#c0ca33', '#afb42b', '#9e9d24', '#827717', '#fffde7', '#fff9c4', '#fff59d', '#fff176', '#ffee58', '#ffeb3b', '#fdd835', '#fbc02d', '#f9a825', '#f57f17', '#fff8e1', '#ffecb3', '#ffe082', '#ffd54f', '#ffca28', '#ffc107', '#ffb300', '#ffa000', '#ff8f00', '#ff6f00', '#fff3e0', '#ffe0b2', '#ffcc80', '#ffb74d', '#ffa726', '#ff9800', '#fb8c00', '#f57c00', '#ef6c00', '#e65100', '#fbe9e7', '#ffccbc', '#ffab91', '#ff8a65', '#ff7043', '#ff5722', '#f4511e', '#e64a19', '#d84315', '#bf360c', '#efebe9', '#d7ccc8', '#bcaaa4', '#a1887f', '#8d6e63', '#795548', '#6d4c41', '#5d4037', '#4e342e', '#3e2723', '#fafafa', '#f5f5f5', '#eeeeee', '#e0e0e0', '#bdbdbd', '#9e9e9e', '#757575', '#616161', '#424242', '#212121'],
+
     });
   </script>
 </dom-module>
