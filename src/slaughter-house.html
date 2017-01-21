@@ -98,7 +98,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       paper-fab {
         position: absolute;
         bottom: 30px;
-        right: 40px;
+        right: 30px;
       }
 
     </style>
@@ -248,27 +248,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ],
 
       listeners: {
-        'pigClicked': 'openClosePig',
+        'openPig': 'openPig',
+        'scarfPig': 'scarfPig',
         'pigOrganClicked': 'addToCart',
         'cartRemoveItem': 'removeFromCartHandler',
         'cartBuy': 'cartBuy',
         'addPig': 'addPig'
       },
 
-      openClosePig: function(e) {
-        var pig = e.detail.src.pig
-        var id = e.detail.src.id
+      openPig: function(e) {
+        var pig = e.detail.pig
+        var id = pig.getAttribute('pig-id')
         if(!pig.open) {
           this.set('pigs.' + id + '.open', true)
-        } else if (!pig.dead) {
+        }
+      },
+
+      scarfPig: function(e) {
+        var pig = e.detail.pig
+        var id = pig.getAttribute('pig-id')
+        if(!pig.open) {
           this.set('pigs.' + id + '.open', false)
         }
       },
 
       addToCart: function(e) {
-        var pigId = e.detail.pig.id
+        var pigId = e.detail.pig.getAttribute('pig-id')
         var type = e.detail.organ.type
         var color = e.detail.organ.color
+
+        console.log(pigId)
 
         if(!this.user.cart[pigId]) {
           this.set('user.cart.' + pigId, {})
@@ -344,8 +353,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var pig = JSON.parse(JSON.stringify(e.detail.pig))
         var bigestIndex = 0
         for(var i in this.pigs) {
-          if(i > bigestIndex) {
-            bigestIndex = i
+          if(parseInt(i) > bigestIndex) {
+            bigestIndex = parseInt(i)
           }
         }
         bigestIndex += 1

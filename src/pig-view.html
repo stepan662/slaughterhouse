@@ -33,16 +33,96 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       #pig {
-        min-width: 500px;
+        min-width: 300px;
         @apply(--layout-flex-7);
       }
       sl-cart {
         @apply(--layout-flex-5);
       }
+      paper-card {
+        min-width: 300px;
+        overflow: hidden;
+        display: block;
+        margin: 10px;
+      }
 
+      paper-card .card-content {
+        background-color: lightgray;
+        color: black;
+        border-bottom: 1px solid rgba(96, 18, 18, 1);
+        @apply(--paper-font-headline);
+        position: relative;
+        min-height: 32px;
+      }
+
+      paper-card .card-container {
+        padding: 16px;
+      }
+
+      .card-row {
+        position: relative;
+        display: block;
+        margin-bottom: 3px;
+        color: black;
+      }
+
+      .card-row .pig-weight {
+        display: inline-block;
+      }
+
+      .card-row .pig-price {
+        display: inline-block;
+        margin-left: 10px;
+      }
+
+     .card-row .pig-price img {
+        padding:0px;
+        margin:0px;
+        display:inline-block;
+        vertical-align:center;
+        text-align:bottom;
+        margin-bottom: -2px;
+      }
+
+      paper-card .button {
+        display: inline-block;
+        float: right;
+        font-size: 17px;
+        top: -8px;
+        padding: 8px 8px 8px 8px;
+        background-color: rgb(171, 58, 50);
+        text-align: center;
+        --paper-button-ink-color: red;
+      }
+
+      #pigContainer {
+        max-width: 500px;
+        margin: 0px auto;
+      }
     </style>
     <div id="pig">
-      <sl-pig id=[[pigid]] pig="{{pig}}" interactive></sl-pig>
+      <div id='pigContainer'>
+        <sl-pig scale="width" id='sl-pig' dead={{pigDead}} pig-id$=[[pigid]] pig="{{pig}}" interactive></sl-pig>
+      </div>
+      <paper-card id="cart">
+        <div class="card-content">
+          [[pig.name]]
+          <template is="dom-if" if="[[!pigDead]]">
+            <paper-button on-tap="openPig" class="button">[[buttonText]]</paper-button>
+          </template>
+        </div>
+        <div class="card-container">
+          <div class="card-row">
+            <div class="pig-weight">
+              <img src="../images/weight.svg" height="15px"> [[pig.weight]] lb
+            </div>
+            <div class="pig-price">
+              <img src="../images/pound.svg" height="17px">
+              <span class="pig-price-text">[[priceFormat(pig.price)]]</span>
+            </div>
+          </div>
+        </div>
+      </paper-card>
     </div>
     <sl-cart cart="[[cart]]" pigid="[[pigid]]"></sl-cart>
   </template>
@@ -68,7 +148,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: false,
           notify: true
         },
+        buttonText: {
+          type: String,
+          computed: '_computeButtonText(pig.*)'
+        }
       },
+
+      openPig(e) {
+        if(!this.pig.open) {
+          this.fire('openPig', {pig: this.$['sl-pig']})
+        } else if (!this.$['sl-pig'].dead) {
+          this.fire('scarfPig', {pig: this.$['sl-pig']})
+        }
+      },
+
+      _computeButtonText: function() {
+        if(!this.pig) {
+          return 'unrip'
+        }
+        if(!this.pig.open && !this.$['sl-pig'].dead) {
+          return 'unrip'
+        } else {
+          return 'scarf'
+        }
+      },
+
+      priceFormat: function(num) {
+        return (num * 1.0).toFixed(2)
+      }
     });
   </script>
 </dom-module>

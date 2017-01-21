@@ -68,9 +68,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       paper-card {
-        max-width: 500px;
+        width: 300px;
         margin: 10px;
         transition: linear .2s;
+      }
+
+      @media (max-width: 719px) {
+        paper-card {
+          width: 95%;
+        }
       }
 
       paper-card:hover {
@@ -80,6 +86,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
       paper-card .pig-image {
+        height: 230px;
+        overflow: hidden;
         @apply(--paper-card-header-image);
       }
 
@@ -148,7 +156,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <a class="pig-link" href="/pig/[[item.name]]">
           <paper-card elevation="3">
             <div class="pig-image">
-              <sl-pig style="display: inline block" width="250" pig="[[item.value]]"></sl-pig>
+              <sl-pig style="display: inline block" scale="fit" pig="[[item.value]]"></sl-pig>
               <template is="dom-if" if="[[item.value.inCart]]">
                 <div id='inCart' title="Parts of [[item.value.name]] are in your cart.">
                   <iron-icon icon="icons:shopping-cart"></iron-icon>
@@ -166,7 +174,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div class="card-actions">
               <div class="pig-price">
                 <img src="../images/pound.svg" height="17px">
-                <span class="pig-price-text">[[item.value.price]]</span>
+                <span class="pig-price-text">[[priceFormat(item.value.price)]]</span>
               </div>
             </div>
           </paper-card>
@@ -237,6 +245,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         return arr
       },
+
+      priceFormat: function(num) {
+        return (num * 1.0).toFixed(2)
+      }
     });
   </script>
 </dom-module>

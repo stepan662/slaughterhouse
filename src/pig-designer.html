@@ -79,6 +79,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-left: 15px;
         --paper-input-container-color: black;
         --paper-input-container-input-color: black;
+        --paper-input-container-invalid-color: darkred;
+        margin-bottom: 10px;
       }
 
       #pig .properties {
@@ -96,7 +98,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-left: 60%;
       }
 
-      paper-card .buyButton {
+      paper-card .button {
         display: inline-block;
         float: right;
         font-size: 17px;
@@ -119,15 +121,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div id="pig">
       <sl-pig width="400" pig="[[pig]]"></sl-pig>
       <div class="properties">
-        <paper-input autoValidate=true type="text" label="Name" value={{pig.name}}></paper-input>
-        <paper-input max="500" min="50" type="number" label="Price" value={{pig.price}}></paper-input>
-        <paper-input validator="_weightValidator" type="number" label="Weight" value={{pig.weight}}></paper-input>
+        <paper-input error-message="Can't be empty" invalid="[[!stat.name]]" type="text" label="Name" value={{pig.name}}></paper-input>
+        <paper-input error-message="Insert number between 50 and 500" invalid="[[!stat.price]]" max="500" min="50" type="number" label="Price" value={{pig.price}}></paper-input>
+        <paper-input error-message="Insert number between 50 and 500" invalid="[[!stat.weight]]" max="500" min="50" type="number" label="Weight" value={{pig.weight}}></paper-input>
       </div>
     </div>
     <paper-card id="cart">
       <div class="card-content">
         Pig colors
-        <paper-button on-tap="addPig" class="buyButton">Add Pig</paper-button>
+        <paper-button disabled="[[!stat.ok]]" on-tap="addPig" class="button">Add Pig</paper-button>
       </div>
       <div class="card-container">
         <div class="card-row">
@@ -168,7 +170,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           observer: '_pigObserver',
         },
 
-        formStat: {
+        stat: {
           type: Object,
           computed: '_computeFormStat(pig.*)'
         }
@@ -219,6 +221,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           });
       },
 
+
+      _computeFormStat: function() {
+        var p = this.pig
+        var stat = {
+          name: true,
+          weight: true,
+          price: true,
+          ok: true,
+        }
+        if (p.name == '') {
+          stat.name = false
+        }
+        if (p.price < 50 || p.price > 500) {
+          stat.price = false
+        }
+        if (p.weight < 50 || p.weight > 500) {
+          stat.weight = false
+        }
+        if (p.weight < 50 || p.weight > 500 ||
+              p.price < 50 || p.price > 500 || p.name == '') {
+          stat.ok = false
+        }
+        console.log(stat)
+        return stat
+      },
 
 
       _randomColor: function() {
