@@ -170,7 +170,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       onResize: function(e) {
-        this.async(function() {
+        if (this.lastAsync) {
+          this.cancelAsync(this.lastAsync)
+        }
+        this.lastAsync = this.async(function() {
           var width = this.parent.offsetWidth
           var height = this.parent.offsetHeight
           if(this.scale == 'width') {
@@ -183,6 +186,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this._scale(width, height, true)
           }
         }, 500);
+
+        var width = this.parent.offsetWidth
+        var height = this.parent.offsetHeight
+        if(this.scale == 'width') {
+          this._scale(width, null, false)
+        } else if (this.scale == 'height') {
+          this._scale(null, height, false)
+        } else if (this.scale == 'scale') {
+          this._scale(width, height, false)
+        } else if (this.scale == 'fit') {
+          this._scale(width, height, true)
+        }
       },
 
       pigClicked(e) {
