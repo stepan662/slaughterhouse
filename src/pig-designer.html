@@ -95,7 +95,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .card-name {
         margin-top: 15px;
         display: inline-block;
-        margin-left: 60%;
+        width: 100px;
       }
 
       paper-card .button {
@@ -117,8 +117,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background: #6d6d6d;
       }
 
+      #pigContainer {
+        max-width: 500px;
+        margin: 0px auto;
+        min-height: 200px;
+      }
+
     </style>
     <div id="pig">
+      <div id='pigContainer'>
+        <sl-pig scale="width" id='sl-pig' pig="{{pig}}"></sl-pig>
+      </div>
       <sl-pig width="400" pig="[[pig]]"></sl-pig>
       <div class="properties">
         <paper-input error-message="Can't be empty" invalid="[[!stat.name]]" type="text" label="Name" value={{pig.name}}></paper-input>
@@ -133,25 +142,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
       <div class="card-container">
         <div class="card-row">
-          <paper-swatch-picker id="head" color="{{pig.body.head}}"></paper-swatch-picker><div class="card-name">Head</div>
+          <div class="card-name">Head</div>
+          <paper-swatch-picker id="head" color="{{pig.body.head}}"></paper-swatch-picker>
         </div>
         <div class="card-row">
-          <paper-swatch-picker id="shoulder" color="{{pig.body.shoulder}}"></paper-swatch-picker><div class="card-name">Shoulder</div>
+          <div class="card-name">Shoulder</div>
+          <paper-swatch-picker id="shoulder" color="{{pig.body.shoulder}}"></paper-swatch-picker>
         </div>
         <div class="card-row">
-          <paper-swatch-picker id="back" color="{{pig.body.back}}"></paper-swatch-picker><div class="card-name">Back</div>
+          <div class="card-name">Back</div>
+          <paper-swatch-picker id="back" color="{{pig.body.back}}"></paper-swatch-picker>
         </div>
         <div class="card-row">
-          <paper-swatch-picker id="midbut" color="{{pig.body.midbut}}"></paper-swatch-picker><div class="card-name">Midbut</div>
+          <div class="card-name">Midbut</div>
+          <paper-swatch-picker id="midbut" color="{{pig.body.midbut}}"></paper-swatch-picker>
         </div>
         <div class="card-row">
-          <paper-swatch-picker id="belly" color="{{pig.body.belly}}"></paper-swatch-picker><div class="card-name">Belly</div>
+          <div class="card-name">Belly</div>
+          <paper-swatch-picker id="belly" color="{{pig.body.belly}}"></paper-swatch-picker>
         </div>
         <div class="card-row">
-          <paper-swatch-picker id="ham" color="{{pig.body.ham}}"></paper-swatch-picker><div class="card-name">Ham</div>
+          <div class="card-name">Ham</div>
+          <paper-swatch-picker id="ham" color="{{pig.body.ham}}"></paper-swatch-picker>
         </div>
         <div class="card-row">
-          <paper-swatch-picker id="tail" color="{{pig.body.tail}}"></paper-swatch-picker><div class="card-name">Tail</div>
+          <div class="card-name">Tail</div>
+          <paper-swatch-picker id="tail" color="{{pig.body.tail}}"></paper-swatch-picker>
         </div>
         <div class="card-row" id="randomColors">
           <paper-button on-tap="generateRandomPig">Random colors</paper-button>
@@ -181,7 +197,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _pigObserver: function() {
-        console.log(this.pig.body)
         if(!this.pig.body) {
           this.pig = this._randomPig()
         }
@@ -243,7 +258,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               p.price < 50 || p.price > 500 || p.name == '') {
           stat.ok = false
         }
-        console.log(stat)
         return stat
       },
 
