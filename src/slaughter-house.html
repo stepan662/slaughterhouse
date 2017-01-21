@@ -250,7 +250,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       listeners: {
         'pigClicked': 'openClosePig',
         'pigOrganClicked': 'addToCart',
-        'cartRemoveItem': 'removeFromCart',
+        'cartRemoveItem': 'removeFromCartHandler',
         'cartBuy': 'cartBuy',
         'addPig': 'addPig'
       },
@@ -279,10 +279,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      removeFromCart: function(e) {
+      removeFromCartHandler: function(e) {
         var pigId = e.detail.pig
         var organ = e.detail.organ
+        this.removeFromCart(pigId, organ)
+      },
 
+      removeFromCart: function(pigId, organ) {
         if(this.user.cart[pigId] && this.user.cart[pigId][organ]) {
           var newItem = JSON.parse(JSON.stringify(this.user.cart[pigId]));
           delete newItem[organ]
@@ -372,12 +375,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         for(var cartPigId in this.user.cart) {
           var cartPig = this.user.cart[cartPigId]
-          if(pigs[cartPigId] && pigs[cartPigId]['body']) {
-            pigs[cartPigId].inCart = true
-            for(var organName in cartPig) {
+          for(var organName in cartPig) {
+            if(pigs[cartPigId] && pigs[cartPigId].body[organName] != null) {
+              pigs[cartPigId].inCart = true
               pigs[cartPigId]['body'][organName] = null
+            } else {
+              this.removeFromCart(cartPigId, organName)
             }
           }
+
         }
         return pigs
       },
