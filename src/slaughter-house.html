@@ -149,12 +149,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-header fixed shadow>
           <app-toolbar>
             <template is="dom-if" if="[[!pageIsPigs]]">
-              <a href="/">
+              <a href="/" tabindex="-1">
                 <paper-icon-button class="backButton" icon="icons:arrow-back"></paper-icon-button>
               </a>
             </template>
             <div class="mainTitle" main-title>[[pageTitle]]</div>
-            <a class="cartIcon" href="/cart">
+            <a class="cartIcon" href="/cart" tabindex="-1">
               <paper-button>
                 <div class$="[[cartItemClass]]">[[cartItemCount]]</div>
                 <iron-icon class$=[[cartItemClass]] icon="icons:shopping-cart"></iron-icon>
@@ -372,9 +372,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         for(var cartPigId in this.user.cart) {
           var cartPig = this.user.cart[cartPigId]
-          pigs[cartPigId].inCart = true
-          for(var organName in cartPig) {
-            pigs[cartPigId]['body'][organName] = null
+          if(pigs[cartPigId] && pigs[cartPigId]['body']) {
+            pigs[cartPigId].inCart = true
+            for(var organName in cartPig) {
+              pigs[cartPigId]['body'][organName] = null
+            }
           }
         }
         return pigs
