@@ -5,7 +5,7 @@
     "src/pigs-list.html",
     "src/pig-view.html",
     "src/sl-cart.html",
-    "src/pig-designer.html",
+    "src/pig-designer.html"
   ],
   "sourceGlobs": [
    "src/**/*",
