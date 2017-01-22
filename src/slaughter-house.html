@@ -28,6 +28,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="sl-cart.html">
 <link rel="import" href="sl-overview.html">
 <link rel="import" href="melon.html">
@@ -103,6 +104,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background-color: #a00000;
       }
 
+      #loading {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        z-index: 10000;
+        transform: translate(-50%, -50%);
+        visibility: visible;
+      }
+
     </style>
 
     <app-location route="{{route}}"></app-location>
@@ -143,6 +153,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </iron-localstorage>
 
     <sl-overview id="dialog"></sl-overview>
+
+    <div id="loading">
+      <paper-spinner active></paper-spinner>
+    </div>
 
     <app-drawer-layout fullbleed>
 
@@ -214,6 +228,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         pigs: {
           type: Object,
+          value: null,
+          observer: '_hideLoading',
         },
         user: {
           type: Object,
@@ -366,12 +382,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.set('route.path', '/pigs');
       },
 
-
+      _hideLoading() {
+        if(!this.loaded && this.pigs) {
+          this.$.loading.style.visibility = 'hidden'
+        }
+      },
 
       _computeLocalPigs: function() {
         //combine local and firebase data
 
-        if(Object.keys(this.pigs).length == 0 || !this.user.cart)
+        if(this.pigs==null || Object.keys(this.pigs).length == 0 || !this.user.cart)
           return {}
 
         //copy json object
@@ -401,7 +421,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
       _computeCartItemCount: function() {
-        if(!this.user.cart)
+        if(!this.user)
           return 0
 
         var cart = this.user.cart;
