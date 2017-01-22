@@ -60,6 +60,59 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       .pigs {
         margin: 5px 15px 5px 15px;
+        @apply(--layout-horizontal);
+        @apply(--layout-wrap);
+      }
+
+      @media(min-width: 325px) {
+        .pigContainer {
+          flex-basis: 100%;
+        }
+      }
+
+      @media(min-width: 575px) {
+        .pigContainer {
+          flex-basis: 50%;
+        }
+      }
+
+      @media(min-width: 825px) {
+        .pigContainer {
+          flex-basis: 33.33%;
+        }
+      }
+
+      @media(min-width: 1075px) {
+        .pigContainer {
+          flex-basis: 25%;
+        }
+      }
+
+      @media(min-width: 1325px) {
+        .pigContainer {
+          flex-basis: 20%;
+        }
+      }
+
+      @media(min-width: 1575px) {
+        .pigContainer {
+          flex-basis: 16.66%;
+        }
+      }
+
+      @media(min-width: 1825px) {
+        .pigContainer {
+          display: inline-block;
+          width: 270px;
+        }
+        .pigs {
+          display: block;
+        }
+      }
+
+      .pigCover {
+        margin: 10px;
+        background-color: black;
       }
 
       .pig-link {
@@ -68,15 +121,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       paper-card {
-        width: 300px;
-        margin: 10px;
-        transition: linear .2s;
-      }
-
-      @media (max-width: 719px) {
-        paper-card {
-          width: 95%;
-        }
+        display: block;
       }
 
       paper-card:hover {
@@ -86,7 +131,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
       paper-card .pig-image {
-        height: 230px;
+        height: 160px;
+        max-width: 230px;
+        margin: 0px auto;
+        margin-top: 20px;
         overflow: hidden;
         @apply(--paper-card-header-image);
       }
@@ -119,13 +167,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-bottom: -2px;
       }
 
-      #inCart {
+      .inCart {
         position: absolute;
         right: 4px;
         top: 4px;
       }
 
-      #inCart iron-icon {
+      .inCart iron-icon {
         --iron-icon-fill-color: rgb(96, 18, 18);
         --iron-icon-width: 30px;
         --iron-icon-height: 30px;
@@ -153,32 +201,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <template is="dom-repeat" filter="{{pigSearch(searchValue)}}"
                 items="{{pigsArr}}" rendered-item-count="{{itemCount}}"
                 sort="{{pigSort(sortBy)}}">
-        <a class="pig-link" href="/pig/[[item.name]]">
-          <paper-card elevation="3">
-            <div class="pig-image">
-              <sl-pig style="display: inline block" scale="fit" pig="[[item.value]]"></sl-pig>
-              <template is="dom-if" if="[[item.value.inCart]]">
-                <div id='inCart' title="Parts of [[item.value.name]] are in your cart.">
-                  <iron-icon icon="icons:shopping-cart"></iron-icon>
+        <div class='pigContainer'>
+          <div class="pigCover">
+
+            <a class="pig-link" href="/pig/[[item.name]]">
+              <paper-card elevation="3">
+                <div class="pig-image">
+                  <sl-pig scale="width" pig="[[item.value]]"></sl-pig>
+                  <template is="dom-if" if="[[item.value.inCart]]">
+                    <div class='inCart' title="Parts of [[item.value.name]] are in your cart.">
+                      <iron-icon icon="icons:shopping-cart"></iron-icon>
+                    </div>
+                  </template>
                 </div>
-              </template>
-            </div>
-            <div class="card-content">
-              <div class="pig-name">[[item.value.name]]</div>
-              <div class="pig-properities">
-                <div class="pig-weight">
-                  <img src="../images/weight.svg" height="15px"> [[item.value.weight]] lb
+                <div class="card-content">
+                  <div class="pig-name">[[item.value.name]]</div>
+                  <div class="pig-properities">
+                    <div class="pig-weight">
+                      <img src="../images/weight.svg" height="15px"> [[item.value.weight]] lb
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div class="card-actions">
-              <div class="pig-price">
-                <img src="../images/pound.svg" height="17px">
-                <span class="pig-price-text">[[priceFormat(item.value.price)]]</span>
-              </div>
-            </div>
-          </paper-card>
-        </a>
+                <div class="card-actions">
+                  <div class="pig-price">
+                    <img src="../images/pound.svg" height="17px">
+                    <span class="pig-price-text">[[priceFormat(item.value.price)]]</span>
+                  </div>
+                </div>
+              </paper-card>
+            </a>
+          </div>
+        </div>
       </template>
     </div>
   </template>
