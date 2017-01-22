@@ -193,7 +193,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
     <div id="filter">
-      <paper-input id="search" invalid=[[!itemCount]]
+      <paper-input id="search" invalid="[[_pigsNothingFound(itemCount, pigs)]]"
         error-message="No results" label="Search"
         value="{{searchValue}}">
       </paper-input>
@@ -231,13 +231,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   <div class="pig-name">[[item.value.name]]</div>
                   <div class="pig-properities">
                     <div class="pig-weight">
-                      <img src="../images/weight.svg" height="15px"> [[item.value.weight]] lb
+                      <img src="/images/weight.svg" height="15px"> [[item.value.weight]] lb
                     </div>
                   </div>
                 </div>
                 <div class="card-actions">
                   <div class="pig-price">
-                    <img src="../images/pound.svg" height="17px">
+                    <img src="/images/pound.svg" height="17px">
                     <span class="pig-price-text">[[priceFormat(item.value.price)]]</span>
                   </div>
                 </div>
@@ -298,6 +298,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
           };
         }
+      },
+
+      _pigsNothingFound: function(num, pigs) {
+        return (num == 0 && pigs != null
+                  && Object.keys(pigs).length != 0)
       },
 
       _pigsToArr: function(a) {
