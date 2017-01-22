@@ -106,15 +106,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         overflow-y: scroll;
       }
       body::-webkit-scrollbar {
-        width: 5px;
+        width: 8px;
       }
 
       body::-webkit-scrollbar-thumb {
-        background: #555;
+        background: rgba(138, 138, 138, 0.19);
+      }
+
+      body::-webkit-scrollbar-thumb:active {
+        background: rgba(138, 138, 138, 0.6);
       }
 
       body::-webkit-scrollbar-track {
-        background: #131313;
+        background: url('../images/scrollbar.png');
+        background-position: top;
+        background-repeat: repeat-x;
       }
     </style>
   </head>
