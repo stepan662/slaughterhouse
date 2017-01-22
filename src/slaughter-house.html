@@ -96,9 +96,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       paper-fab {
-        position: absolute;
-        bottom: 30px;
-        right: 30px;
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
       }
 
     </style>
@@ -145,7 +145,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-drawer-layout fullbleed>
 
       <!-- Main content -->
-      <app-header-layout has-scrolling-region>
+      <app-header-layout>
         <app-header fixed shadow>
           <app-toolbar>
             <template is="dom-if" if="[[!pageIsPigs]]">
@@ -399,6 +399,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
       _computeCartItemCount: function() {
+        if(!this.user.cart)
+          return 0
+
         var cart = this.user.cart;
         var count = 0;
         for(var pigid in cart) {
