@@ -159,7 +159,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if(!this.pig.open) {
           this.fire('openPig', {pig: this.$['sl-pig']})
         } else if (!this.$['sl-pig'].dead) {
-          this.fire('scarfPig', {pig: this.$['sl-pig']})
+          this.fire('unitePig', {pig: this.$['sl-pig']})
         }
       },
 
@@ -170,7 +170,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if(!this.pig.open && !this.$['sl-pig'].dead) {
           return 'unrip'
         } else {
-          return 'scarf'
+          return 'unite'
         }
       },
 
