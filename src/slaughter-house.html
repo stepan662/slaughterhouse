@@ -29,6 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="sl-cart.html">
 <link rel="import" href="sl-overview.html">
 <link rel="import" href="melon.html">
@@ -105,12 +106,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       #loading {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        z-index: 10000;
-        transform: translate(-50%, -50%);
+        z-index: 1;
         visibility: visible;
+        background: transparent;
+        box-shadow: none;
+      }
+
+      #loading paper-spinner {
+        width: 50px;
+        height: 50px;
       }
 
     </style>
@@ -154,9 +158,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <sl-overview id="dialog"></sl-overview>
 
-    <div id="loading">
+    <paper-dialog opened="true" modal id="loading">
       <paper-spinner active></paper-spinner>
-    </div>
+    </paper-dialog>
 
     <app-drawer-layout fullbleed>
 
@@ -384,7 +388,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _hideLoading() {
         if(!this.loaded && this.pigs) {
-          this.$.loading.style.visibility = 'hidden'
+          this.$.loading.close()
         }
       },
 
