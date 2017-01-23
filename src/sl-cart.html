@@ -98,7 +98,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="card-content">
         Cart
         <template is="dom-if" if="[[buyButton]]">
-          <paper-button disabled="[[!online]]" on-tap="_buyClicked" class="buyButton">Kill & Buy</paper-button>
+          <paper-button disabled="[[!online]]" on-tap="_buyClicked" class="buyButton">[[buyButtonText]]</paper-button>
         </template>
       </div>
       <div class="list">
@@ -141,6 +141,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         buyButton: {
           type: Boolean,
           computed: '_computeBuyButton(cart.*, cartList)',
+        },
+        buyButtonText: {
+          type: String,
+          computed: '_computeBuyButtonText(online)',
         }
       },
 
@@ -168,6 +172,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _computeBuyButton: function() {
         return (this.pigid == null && this.cartList.items.length != 0)
+      },
+
+      _computeBuyButtonText: function() {
+        return this.online ? 'Kill & Buy' : 'Offline'
       },
     });
   </script>

@@ -291,10 +291,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var attr = objItem.getAttribute('value')
           var desc = objItem.getAttribute('desc') == "false" ? 1 : -1
           return function(first, second) {
-            if (typeof(first.value[attr]) == "string") {
+            if (attr == 'name') {
               return desc * first.value[attr].localeCompare(second.value[attr])
             } else {
-              return desc * (first.value[attr] > second.value[attr] ? 1 : -1)
+              return desc * (parseFloat(first.value[attr]) > parseFloat(second.value[attr]) ? 1 : -1)
             }
           };
         }
