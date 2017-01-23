@@ -107,14 +107,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         min-height: 100vh;
         background-color: #2a363b;
         color: #e8e8e8;
-        overflow-y: scroll;
       }
       body::-webkit-scrollbar {
-        width: 8px;
+        width: 10px;
       }
 
       body::-webkit-scrollbar-thumb {
-        background: rgba(138, 138, 138, 0.19);
+        background: repeating-linear-gradient(
+                      90deg,
+                      rgba(138, 138, 138, 0),
+                      rgba(138, 138, 138, 0) 4px,
+                      rgba(138, 138, 138, 0.15) 4px,
+                      rgba(138, 138, 138, 0.15) 10px);
+        width: 3px;
       }
 
       body::-webkit-scrollbar-thumb:active {
