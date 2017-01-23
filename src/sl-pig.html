@@ -112,7 +112,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         transition: linear .1s;
       }
     </style>
-    <div id="pigcomp" on-tap="pigClicked" class$="[[pigLook]]">
+    <div id="pigcomp" on-tap="_pigClicked" class$="[[pigLook]]">
       <template is="dom-repeat" items="[[bodyArr]]">
         <template is="dom-if" if="[[item]]">
           <sl-organ id="[[item.name]]" color="[[item.value]]" type="[[item.name]]"></sl-organ>
@@ -156,12 +156,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       listeners: {
-        'organClicked': 'organClicked',
-        'iron-resize': 'onResize',
+        'organClicked': '_organClicked',
+        'iron-resize': '_onResize',
       },
 
 
-      organClicked: function(e) {
+      _organClicked: function(e) {
         if(this.interactive && this.pig.open) {
           e.stopPropagation()
           var detail = {organ: e.detail.organ, pig: this}
@@ -169,7 +169,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      onResize: function(e) {
+      _onResize: function(e) {
         if (this.lastAsync) {
           this.cancelAsync(this.lastAsync)
         }
@@ -200,7 +200,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      pigClicked(e) {
+      _pigClicked(e) {
         if(this.interactive && !this.pig.open) {
           this.fire('openPig', {pig: this})
         }

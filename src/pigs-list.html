@@ -211,9 +211,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </paper-dropdown-menu>
     </div>
     <div class="pigs">
-      <template is="dom-repeat" filter="{{pigSearch(searchValue)}}"
+      <template is="dom-repeat" filter="{{_pigSearch(searchValue)}}"
                 items="{{pigsArr}}" rendered-item-count="{{itemCount}}"
-                sort="{{pigSort(sortBy)}}">
+                sort="{{_pigSort(sortBy)}}">
         <div class='pigContainer'>
           <div class="pigCover">
 
@@ -238,7 +238,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <div class="card-actions">
                   <div class="pig-price">
                     <img src="/images/pound.svg" height="17px">
-                    <span class="pig-price-text">[[priceFormat(item.value.price)]]</span>
+                    <span class="pig-price-text">[[_priceFormat(item.value.price)]]</span>
                   </div>
                 </div>
               </paper-card>
@@ -267,7 +267,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           computed: '_pigsToArr(pigs.*)'
         }
       },
-      pigSearch: function(string) {
+      _pigSearch: function(string) {
         if (!string) {
           // set filter to null to disable filtering
           return null;
@@ -281,7 +281,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      pigSort: function(objItem) {
+      _pigSort: function(objItem) {
         if (!objItem) {
           return function(first, second) {
             return first.value['name'].localeCompare(second.value['name'])
@@ -317,7 +317,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return arr
       },
 
-      priceFormat: function(num) {
+      _priceFormat: function(num) {
         return (num * 1.0).toFixed(2)
       }
     });

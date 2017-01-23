@@ -143,7 +143,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <firebase-auth
       id="auth"
       provider="anonymous"
-      on-error="handleError">
+      on-error="_handleError">
     </firebase-auth>
     <firebase-document
       id="document"
@@ -273,7 +273,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         'openPig': 'openPig',
         'unitePig': 'unitePig',
         'pigOrganClicked': 'addToCart',
-        'cartRemoveItem': 'removeFromCartHandler',
+        'cartRemoveItem': '_removeFromCartHandler',
         'cartBuy': 'cartBuy',
         'addPig': 'addPig'
       },
@@ -299,8 +299,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var type = e.detail.organ.type
         var color = e.detail.organ.color
 
-        console.log(pigId)
-
         if(!this.user.cart[pigId]) {
           this.set('user.cart.' + pigId, {})
         }
@@ -308,12 +306,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if(!this.user.cart[pigId][type]) {
           this.set('user.cart.' + pigId + '.' + type, color)
         }
-      },
-
-      removeFromCartHandler: function(e) {
-        var pigId = e.detail.pig
-        var organ = e.detail.organ
-        this.removeFromCart(pigId, organ)
       },
 
       removeFromCart: function(pigId, organ) {
@@ -380,10 +372,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         }
         bigestIndex += 1
-        console.log(bigestIndex)
         this.set('pigs.' + bigestIndex, pig)
         this.set('user.pigDesigned', {})
         this.set('route.path', '/pigs');
+      },
+
+      _removeFromCartHandler: function(e) {
+        var pigId = e.detail.pig
+        var organ = e.detail.organ
+        this.removeFromCart(pigId, organ)
       },
 
       _hideLoading() {
@@ -515,7 +512,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           });
       },
 
-      handleError: function(e) {
+      _handleError: function(e) {
         console.log('Error:', e)
       },
 

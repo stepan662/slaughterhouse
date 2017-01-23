@@ -138,7 +138,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <paper-card id="cart">
       <div class="card-content">
         Pig colors
-        <paper-button disabled="[[!stat.ok]]" on-tap="addPig" class="button">Add Pig</paper-button>
+        <paper-button disabled="[[!stat.ok]]" on-tap="_addPig" class="button">Add Pig</paper-button>
       </div>
       <div class="card-container">
         <div class="card-row">
@@ -170,7 +170,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-swatch-picker id="tail" color="{{pig.body.tail}}"></paper-swatch-picker>
         </div>
         <div class="card-row" id="randomColors">
-          <paper-button on-tap="generateRandomPig">Random colors</paper-button>
+          <paper-button on-tap="_generateRandomPig">Random colors</paper-button>
         </div>
       </div>
     </paper-card>
@@ -193,7 +193,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       listeners: {
-        'organClicked': 'organClicked',
+        'organClicked': '_organClicked',
       },
 
       _pigObserver: function() {
@@ -220,11 +220,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      addPig: function() {
+      _addPig: function() {
         this.fire('addPig', {pig: this.pig})
       },
 
-      generateRandomPig: function() {
+      _generateRandomPig: function() {
         this.set('pig.body', {
             back: this._randomColor(),
             belly: this._randomColor(),
@@ -266,7 +266,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return this.colors[~~(Math.random() * this.colors.length)];
       },
 
-      organClicked: function(e) {
+      _organClicked: function(e) {
         this.$[e.detail.organ.type].$$('paper-menu-button').open()
       },
 

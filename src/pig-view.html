@@ -109,7 +109,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="card-content">
           [[pig.name]]
           <template is="dom-if" if="[[!pigDead]]">
-            <paper-button on-tap="openPig" class="button">[[buttonText]]</paper-button>
+            <paper-button on-tap="_openPig" class="button">[[buttonText]]</paper-button>
           </template>
         </div>
         <div class="card-container">
@@ -119,7 +119,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </div>
             <div class="pig-price">
               <img src="/images/pound.svg" height="17px">
-              <span class="pig-price-text">[[priceFormat(pig.price)]]</span>
+              <span class="pig-price-text">[[_priceFormat(pig.price)]]</span>
             </div>
           </div>
         </div>
@@ -155,7 +155,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      openPig(e) {
+      _openPig(e) {
         if(!this.pig.open) {
           this.fire('openPig', {pig: this.$['sl-pig']})
         } else if (!this.$['sl-pig'].dead) {
@@ -174,7 +174,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      priceFormat: function(num) {
+      _priceFormat: function(num) {
         return (num * 1.0).toFixed(2)
       }
     });

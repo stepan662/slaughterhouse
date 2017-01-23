@@ -98,7 +98,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="card-content">
         Cart
         <template is="dom-if" if="[[buyButton]]">
-          <paper-button disabled="[[!online]]" on-tap="buyClicked" class="buyButton">Kill & Buy</paper-button>
+          <paper-button disabled="[[!online]]" on-tap="_buyClicked" class="buyButton">Kill & Buy</paper-button>
         </template>
       </div>
       <div class="list">
@@ -110,7 +110,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div class="organName">
               [[item.type]]
             </div>
-            <paper-button on-tap="removeClicked" pig-id$="[[item.pigid]]" organ-type$="[[item.type]]" class="organRemove">
+            <paper-button on-tap="_removeClicked" pig-id$="[[item.pigid]]" organ-type$="[[item.type]]" class="organRemove">
               Remove
             </paper-button>
           </div>
@@ -144,13 +144,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      removeClicked: function(e) {
+      _removeClicked: function(e) {
         var organType = e.srcElement.getAttribute('organ-type')
         var pigId = e.srcElement.getAttribute('pig-id')
         this.fire('cartRemoveItem', {pig: pigId, organ: organType})
       },
 
-      buyClicked: function(e) {
+      _buyClicked: function(e) {
         this.fire('cartBuy')
       },
 
