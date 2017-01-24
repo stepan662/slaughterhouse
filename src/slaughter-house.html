@@ -270,7 +270,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ],
 
       listeners: {
-        'openPig': 'openPig',
+        'openPig': 'unripPig',
         'unitePig': 'unitePig',
         'pigOrganClicked': 'addToCart',
         'cartRemoveItem': '_removeFromCartHandler',
@@ -278,7 +278,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         'addPig': 'addPig'
       },
 
-      openPig: function(e) {
+      unripPig: function(e) {
         var pig = e.detail.pig
         var id = pig.getAttribute('pig-id')
         if(!pig.open) {
