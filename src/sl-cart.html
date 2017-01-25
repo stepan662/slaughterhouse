@@ -149,8 +149,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _removeClicked: function(e) {
-        var organType = e.srcElement.getAttribute('organ-type')
-        var pigId = e.srcElement.getAttribute('pig-id')
+        var srcElement = e.srcElement || e.target
+        var organType = srcElement.getAttribute('organ-type')
+        var pigId = srcElement.getAttribute('pig-id')
         this.fire('cartRemoveItem', {pig: pigId, organ: organType})
       },
 
