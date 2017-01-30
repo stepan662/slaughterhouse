@@ -1,6 +1,6 @@
 Slaughterhouse web e-shop
 
-This project is based on polymer-cli template. To get this working, you need to install additional libraries and programmes. On linux system use following commands:
+This project is based on polymer-cli template. To get this working, you need to install additional libraries and programs. On linux system use following commands:
 
 ## Install nodejs and [npm](https://www.npmjs.com/)
 
