@@ -1,4 +1,4 @@
-Slaughterhouse web e-shop
+Slaughterhouse web e-shop ([DEMO](https://slaughterhouse-81b78.firebaseapp.com/))
 
 This project is based on polymer-cli template. To get this working, you need to install additional libraries and programs. On linux system use following commands:
 
